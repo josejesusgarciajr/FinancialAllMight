@@ -20,9 +20,13 @@ import DiamondIcon from '@mui/icons-material/Diamond'
 // finance
 import { useFinance } from '../context/FinanceContext'
 
+// react router
+import { useNavigate } from 'react-router-dom'
+
 export const Home = () => {
 
     const { income } = useFinance()
+    const navigate = useNavigate()
 
     const stats = [
         { value: (income != null && income > 0) ? `$${income.toLocaleString('en-US')}` : '—', label: 'Net Worth' },
@@ -36,21 +40,25 @@ export const Home = () => {
             icon: <AttachMoneyIcon fontSize="large" sx={{ color: '#00C896' }} />,
             title: 'Income',
             description: 'Track every dollar coming in. Monitor salary, side income, dividends, and cash flow trends to understand what you actually earn.',
+            navigationPath: '/income',
         },
         {
             icon: <CreditCardIcon fontSize="large" sx={{ color: '#4F8EF7' }} />,
             title: 'Debt',
             description: 'See all your balances in one place. Track loans, credit cards, and mortgages — with payoff timelines and interest cost breakdowns.',
+            navigationPath: '/debt',
         },
         {
             icon: <AutoGraphIcon fontSize="large" sx={{ color: '#00C896' }} />,
             title: 'Investments',
             description: 'Grow your wealth with purpose. Monitor stocks, ETFs, and retirement accounts with clear performance and allocation breakdowns.',
+            navigationPath: '/investments',
         },
         {
             icon: <TrendingUpIcon fontSize="large" sx={{ color: '#4F8EF7' }} />,
             title: 'Portfolio Analytics',
             description: 'Track every asset in real time. Visualize performance, allocation, and growth across all your accounts.',
+            navigationPath: '/portfolio-analytics',
         },
     ]
 
@@ -201,6 +209,7 @@ export const Home = () => {
                         <Grid size={{ xs: 12, sm: 6, md: 3 }} key={feature.title}>
                             <Paper
                                 elevation={0}
+                                onClick={() => navigate(feature.navigationPath)}
                                 sx={{
                                     p: 3.5,
                                     height: '100%',
