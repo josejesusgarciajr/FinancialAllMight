@@ -22,6 +22,7 @@ import TrendingDownIcon from '@mui/icons-material/TrendingDown'
 
 const navLinks = [
     { label: 'Home', path: '/' },
+    { label: 'Income', path: '/income' },
 ]
 
 const ticker = [
@@ -133,7 +134,7 @@ export const Navbar = () => {
                         }}
                     >
                         {[...ticker, ...ticker].map((item, i) => (
-                            <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 0.75, whiteSpace: 'nowrap' }}>
+                            <Box key={`${item.symbol}-${i}`} sx={{ display: 'flex', alignItems: 'center', gap: 0.75, whiteSpace: 'nowrap' }}>
                                 <Typography sx={{ fontWeight: 700, color: 'text.secondary', fontSize: '0.68rem', letterSpacing: '0.06em' }}>
                                     {item.symbol}
                                 </Typography>

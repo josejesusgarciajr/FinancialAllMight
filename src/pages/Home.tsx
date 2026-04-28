@@ -1,3 +1,4 @@
+// material ui
 import {
     Box,
     Button,
@@ -16,37 +17,43 @@ import AutoGraphIcon from '@mui/icons-material/AutoGraph'
 import ShowChartIcon from '@mui/icons-material/ShowChart'
 import DiamondIcon from '@mui/icons-material/Diamond'
 
-const features = [
-    {
-        icon: <AttachMoneyIcon fontSize="large" sx={{ color: '#00C896' }} />,
-        title: 'Income',
-        description: 'Track every dollar coming in. Monitor salary, side income, dividends, and cash flow trends to understand what you actually earn.',
-    },
-    {
-        icon: <CreditCardIcon fontSize="large" sx={{ color: '#4F8EF7' }} />,
-        title: 'Debt',
-        description: 'See all your balances in one place. Track loans, credit cards, and mortgages — with payoff timelines and interest cost breakdowns.',
-    },
-    {
-        icon: <AutoGraphIcon fontSize="large" sx={{ color: '#00C896' }} />,
-        title: 'Investments',
-        description: 'Grow your wealth with purpose. Monitor stocks, ETFs, and retirement accounts with clear performance and allocation breakdowns.',
-    },
-    {
-        icon: <TrendingUpIcon fontSize="large" sx={{ color: '#4F8EF7' }} />,
-        title: 'Portfolio Analytics',
-        description: 'Track every asset in real time. Visualize performance, allocation, and growth across all your accounts.',
-    },
-]
-
-const stats = [
-    { value: '$284,129', label: 'Net Worth' },
-    { value: '389', label: 'Total Debt' },
-    { value: '18.7%', label: 'Avg. Annual Return' },
-    { value: '50+', label: 'Direction' },
-]
+// finance
+import { useFinance } from '../context/FinanceContext'
 
 export const Home = () => {
+
+    const { income } = useFinance()
+
+    const stats = [
+        { value: (income != null && income > 0) ? `$${income.toLocaleString('en-US')}` : '—', label: 'Net Worth' },
+        { value: '389', label: 'Total Debt' },
+        { value: '18.7%', label: 'Avg. Annual Return' },
+        { value: '50+', label: 'Direction' },
+    ]
+
+    const features = [
+        {
+            icon: <AttachMoneyIcon fontSize="large" sx={{ color: '#00C896' }} />,
+            title: 'Income',
+            description: 'Track every dollar coming in. Monitor salary, side income, dividends, and cash flow trends to understand what you actually earn.',
+        },
+        {
+            icon: <CreditCardIcon fontSize="large" sx={{ color: '#4F8EF7' }} />,
+            title: 'Debt',
+            description: 'See all your balances in one place. Track loans, credit cards, and mortgages — with payoff timelines and interest cost breakdowns.',
+        },
+        {
+            icon: <AutoGraphIcon fontSize="large" sx={{ color: '#00C896' }} />,
+            title: 'Investments',
+            description: 'Grow your wealth with purpose. Monitor stocks, ETFs, and retirement accounts with clear performance and allocation breakdowns.',
+        },
+        {
+            icon: <TrendingUpIcon fontSize="large" sx={{ color: '#4F8EF7' }} />,
+            title: 'Portfolio Analytics',
+            description: 'Track every asset in real time. Visualize performance, allocation, and growth across all your accounts.',
+        },
+    ]
+
     return (
         <Box>
             {/* Hero */}
