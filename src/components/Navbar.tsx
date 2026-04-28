@@ -69,7 +69,7 @@ export const Navbar = () => {
                         }}
                         onClick={() => handleNav('/')}
                     >
-                        {import.meta.env.VITE_APP_NAME ?? 'FINANCIAL MUTANT'}
+                        {import.meta.env.VITE_APP_NAME ?? 'FINANCIAL ALL MIGHT'}
                     </Typography>
 
                     {isMobile ? (

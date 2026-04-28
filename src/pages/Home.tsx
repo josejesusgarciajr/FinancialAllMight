@@ -9,27 +9,28 @@ import {
     Chip,
 } from '@mui/material'
 import TrendingUpIcon from '@mui/icons-material/TrendingUp'
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
-import SecurityIcon from '@mui/icons-material/Security'
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
+import BoltIcon from '@mui/icons-material/Bolt'
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
+import CreditCardIcon from '@mui/icons-material/CreditCard'
+import AutoGraphIcon from '@mui/icons-material/AutoGraph'
 import ShowChartIcon from '@mui/icons-material/ShowChart'
 import DiamondIcon from '@mui/icons-material/Diamond'
 
 const features = [
     {
-        icon: <NotificationsActiveIcon fontSize="large" sx={{ color: '#00C896' }} />,
+        icon: <AttachMoneyIcon fontSize="large" sx={{ color: '#00C896' }} />,
         title: 'Income',
-        description: 'Never miss a market-moving event. Get instant notifications on price targets, earnings, and risk thresholds.',
+        description: 'Track every dollar coming in. Monitor salary, side income, dividends, and cash flow trends to understand what you actually earn.',
     },
     {
-        icon: <SecurityIcon fontSize="large" sx={{ color: '#4F8EF7' }} />,
+        icon: <CreditCardIcon fontSize="large" sx={{ color: '#4F8EF7' }} />,
         title: 'Debt',
-        description: 'Protect your downside with smart hedging signals, portfolio stress tests, and volatility tracking.',
+        description: 'See all your balances in one place. Track loans, credit cards, and mortgages — with payoff timelines and interest cost breakdowns.',
     },
     {
-        icon: <AccountBalanceIcon fontSize="large" sx={{ color: '#00C896' }} />,
+        icon: <AutoGraphIcon fontSize="large" sx={{ color: '#00C896' }} />,
         title: 'Investments',
-        description: 'Maximize after-tax returns with automated tax-loss harvesting insights and year-round planning tools.',
+        description: 'Grow your wealth with purpose. Monitor stocks, ETFs, and retirement accounts with clear performance and allocation breakdowns.',
     },
     {
         icon: <TrendingUpIcon fontSize="large" sx={{ color: '#4F8EF7' }} />,
@@ -54,7 +55,7 @@ export const Home = () => {
                     background: 'linear-gradient(135deg, #070B14 0%, #0A1628 50%, #0F1923 100%)',
                     position: 'relative',
                     overflow: 'hidden',
-                    py: { xs: 10, md: 16 },
+                    py: { xs: 8, md: 12 },
                     textAlign: 'center',
                     '&::before': {
                         content: '""',
@@ -125,14 +126,6 @@ export const Home = () => {
                             sx={{ px: 4, py: 1.5, fontSize: '1rem' }}
                         >
                             Start Investing Smarter
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            size="large"
-                            sx={{ px: 4, py: 1.5, fontSize: '1rem' }}
-                        >
-                            View Demo
                         </Button>
                     </Stack>
                 </Container>
@@ -244,7 +237,7 @@ export const Home = () => {
                 sx={{
                     background: 'linear-gradient(135deg, #0A1628 0%, #0D1A2E 50%, #0F1923 100%)',
                     borderTop: '1px solid rgba(79, 142, 247, 0.15)',
-                    py: { xs: 8, md: 12 },
+                    py: { xs: 2, md: 4 },
                     textAlign: 'center',
                     position: 'relative',
                     overflow: 'hidden',
@@ -276,13 +269,13 @@ export const Home = () => {
                             mb: 3,
                         }}
                     >
-                        <TrendingUpIcon sx={{ fontSize: 32, color: 'primary.main' }} />
+                        <BoltIcon sx={{ fontSize: 32, color: 'primary.main' }} />
                     </Box>
                     <Typography variant="h4" sx={{ fontWeight: 800, mb: 2, color: 'text.primary' }}>
                         Ready to Build<br />Generational Wealth?
                     </Typography>
                     <Typography variant="body1" color="text.secondary" sx={{ mb: 4, lineHeight: 1.75 }}>
-                        Join thousands of investors who trust Financial Mutant to manage, grow, and protect their portfolios.
+                        Become the Pillar of hope for your family and community. Start your journey to financial freedom with tools designed to help you win.
                     </Typography>
                 </Container>
             </Box>
