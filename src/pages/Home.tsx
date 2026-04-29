@@ -29,10 +29,10 @@ export const Home = () => {
     const navigate = useNavigate()
 
     const stats = [
-        { value: (income != null && income > 0) ? `$${income.toLocaleString('en-US')}` : '—', label: 'Net Worth' },
-        { value: '389', label: 'Total Debt' },
-        { value: '18.7%', label: 'Avg. Annual Return' },
-        { value: '50+', label: 'Direction' },
+        { value: (income != null && income > 0) ? `$${income.toLocaleString('en-US')}` : '—', label: 'Gross Income' },
+        { value: '-', label: 'Total Debt' },
+        { value: '-', label: 'Avg. Annual Return' },
+        { value: '-', label: 'Direction' },
     ]
 
     const features = [
