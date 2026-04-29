@@ -209,7 +209,7 @@ export const Income = () => {
                                 Estimated Tax Breakdown
                             </Typography>
                             <Chip
-                                label="2024 Single Filer"
+                                label="2025 Single Filer"
                                 size="small"
                                 sx={{ bgcolor: 'rgba(79,142,247,0.1)', color: 'primary.light', border: '1px solid rgba(79,142,247,0.2)' }}
                             />
@@ -221,7 +221,7 @@ export const Income = () => {
                                 ? 'Enter your income above to see the breakdown.'
                                 : !hasState
                                 ? 'Select your filing state above to include state taxes.'
-                                : 'Estimates based on 2024 federal and state rates for a single filer.'}
+                                : 'Estimates based on 2025 federal and state rates for a single filer.'}
                         </Typography>
                     </Grid>
 
@@ -230,7 +230,7 @@ export const Income = () => {
                         <MetricCard
                             label="Federal Income Tax"
                             amount={taxes ? fmt(taxes.federalIncomeTax) : '—'}
-                            subtitle={taxes ? `${pct(taxes.federalIncomeTax / taxes.grossIncome)} of gross · std. deduction $14,600` : 'Marginal rate up to 37%'}
+                            subtitle={taxes ? `${pct(taxes.federalIncomeTax / taxes.grossIncome)} of gross · std. deduction $15,000` : 'Marginal rate up to 37%'}
                             icon={<AccountBalanceIcon fontSize="small" />}
                             accentColor="#4F8EF7"
                             dim={!taxes}

@@ -1,26 +1,28 @@
 import type { StateTaxInfo, TaxBracket, TaxBreakdown } from '../types/taxes'
 
-// ─── Federal 2024 (single filer) ─────────────────────────────────────────────
-const FEDERAL_STANDARD_DEDUCTION = 14_600
+// ─── Federal 2025 (single filer) — IRS Rev. Proc. 2024-61 ────────────────────
+const FEDERAL_STANDARD_DEDUCTION = 15_000
 
 const FEDERAL_BRACKETS: TaxBracket[] = [
-    { min: 0,        max: 11_600,  rate: 0.10 },
-    { min: 11_600,   max: 47_150,  rate: 0.12 },
-    { min: 47_150,   max: 100_525, rate: 0.22 },
-    { min: 100_525,  max: 191_950, rate: 0.24 },
-    { min: 191_950,  max: 243_725, rate: 0.32 },
-    { min: 243_725,  max: 609_350, rate: 0.35 },
-    { min: 609_350,  max: Infinity, rate: 0.37 },
+    { min: 0,        max: 11_925,  rate: 0.10 },
+    { min: 11_925,   max: 48_475,  rate: 0.12 },
+    { min: 48_475,   max: 103_350, rate: 0.22 },
+    { min: 103_350,  max: 197_300, rate: 0.24 },
+    { min: 197_300,  max: 250_525, rate: 0.32 },
+    { min: 250_525,  max: 626_350, rate: 0.35 },
+    { min: 626_350,  max: Infinity, rate: 0.37 },
 ]
 
-// FICA 2024
+// FICA 2025
 const SS_RATE = 0.062
-const SS_WAGE_BASE = 168_600
+const SS_WAGE_BASE = 176_100          // up from $168,600 in 2024
 const MEDICARE_RATE = 0.0145
 const ADDITIONAL_MEDICARE_RATE = 0.009
 const ADDITIONAL_MEDICARE_THRESHOLD = 200_000
 
-// ─── State income tax data 2024 (single filer, for planning purposes) ────────
+// ─── State income tax data 2025 (single filer, for planning purposes) ─────────
+// States that conform to the federal standard deduction use $15,000.
+// State-specific deductions that are set independently retain their own values.
 const NO_TAX: Pick<StateTaxInfo, 'hasTax' | 'brackets' | 'standardDeduction'> = {
     hasTax: false,
     brackets: [],
@@ -38,7 +40,8 @@ const STATE_TAX_DATA: Record<string, StateTaxInfo> = {
     },
     'Alaska': { name: 'Alaska', ...NO_TAX },
     'Arizona': {
-        name: 'Arizona', hasTax: true, standardDeduction: 14_600,
+        // Conforms to federal standard deduction
+        name: 'Arizona', hasTax: true, standardDeduction: 15_000,
         brackets: [{ min: 0, max: Infinity, rate: 0.025 }],
     },
     'Arkansas': {
@@ -65,7 +68,8 @@ const STATE_TAX_DATA: Record<string, StateTaxInfo> = {
         ],
     },
     'Colorado': {
-        name: 'Colorado', hasTax: true, standardDeduction: 14_600,
+        // Conforms to federal standard deduction
+        name: 'Colorado', hasTax: true, standardDeduction: 15_000,
         brackets: [{ min: 0, max: Infinity, rate: 0.044 }],
     },
     'Connecticut': {
@@ -115,7 +119,8 @@ const STATE_TAX_DATA: Record<string, StateTaxInfo> = {
         ],
     },
     'Idaho': {
-        name: 'Idaho', hasTax: true, standardDeduction: 14_600,
+        // Conforms to federal standard deduction
+        name: 'Idaho', hasTax: true, standardDeduction: 15_000,
         brackets: [{ min: 0, max: Infinity, rate: 0.058 }],
     },
     'Illinois': {
@@ -123,11 +128,13 @@ const STATE_TAX_DATA: Record<string, StateTaxInfo> = {
         brackets: [{ min: 0, max: Infinity, rate: 0.0495 }],
     },
     'Indiana': {
+        // Rate reduced from 3.05% to 3.0% in 2025
         name: 'Indiana', hasTax: true, standardDeduction: 1_000,
-        brackets: [{ min: 0, max: Infinity, rate: 0.0305 }],
+        brackets: [{ min: 0, max: Infinity, rate: 0.030 }],
     },
     'Iowa': {
-        name: 'Iowa', hasTax: true, standardDeduction: 14_600,
+        // Conforms to federal standard deduction
+        name: 'Iowa', hasTax: true, standardDeduction: 15_000,
         brackets: [{ min: 0, max: Infinity, rate: 0.038 }],
     },
     'Kansas': {
@@ -151,7 +158,8 @@ const STATE_TAX_DATA: Record<string, StateTaxInfo> = {
         ],
     },
     'Maine': {
-        name: 'Maine', hasTax: true, standardDeduction: 14_600,
+        // Conforms to federal standard deduction
+        name: 'Maine', hasTax: true, standardDeduction: 15_000,
         brackets: [
             { min: 0,      max: 24_500, rate: 0.058 },
             { min: 24_500, max: 58_050, rate: 0.0675 },
@@ -180,7 +188,8 @@ const STATE_TAX_DATA: Record<string, StateTaxInfo> = {
         brackets: [{ min: 0, max: Infinity, rate: 0.0425 }],
     },
     'Minnesota': {
-        name: 'Minnesota', hasTax: true, standardDeduction: 14_575,
+        // Mirrors federal standard deduction
+        name: 'Minnesota', hasTax: true, standardDeduction: 15_000,
         brackets: [
             { min: 0,       max: 30_070,  rate: 0.0535 },
             { min: 30_070,  max: 98_760,  rate: 0.068 },
@@ -189,11 +198,13 @@ const STATE_TAX_DATA: Record<string, StateTaxInfo> = {
         ],
     },
     'Mississippi': {
+        // Rate reduced from 4.7% to 4.4% in 2025 (ongoing phase-down)
         name: 'Mississippi', hasTax: true, standardDeduction: 2_300,
-        brackets: [{ min: 0, max: Infinity, rate: 0.047 }],
+        brackets: [{ min: 0, max: Infinity, rate: 0.044 }],
     },
     'Missouri': {
-        name: 'Missouri', hasTax: true, standardDeduction: 14_600,
+        // Conforms to federal standard deduction
+        name: 'Missouri', hasTax: true, standardDeduction: 15_000,
         brackets: [
             { min: 0,     max: 1_121,  rate: 0 },
             { min: 1_121, max: 2_242,  rate: 0.02 },
@@ -235,7 +246,7 @@ const STATE_TAX_DATA: Record<string, StateTaxInfo> = {
         ],
     },
     'New Mexico': {
-        name: 'New Mexico', hasTax: true, standardDeduction: 14_600,
+        name: 'New Mexico', hasTax: true, standardDeduction: 15_000,
         brackets: [
             { min: 0,       max: 5_500,   rate: 0.017 },
             { min: 5_500,   max: 11_000,  rate: 0.032 },
@@ -259,11 +270,13 @@ const STATE_TAX_DATA: Record<string, StateTaxInfo> = {
         ],
     },
     'North Carolina': {
+        // Rate reduced from 4.5% to 4.25% in 2025
         name: 'North Carolina', hasTax: true, standardDeduction: 12_750,
-        brackets: [{ min: 0, max: Infinity, rate: 0.045 }],
+        brackets: [{ min: 0, max: Infinity, rate: 0.0425 }],
     },
     'North Dakota': {
-        name: 'North Dakota', hasTax: true, standardDeduction: 14_600,
+        // Conforms to federal standard deduction
+        name: 'North Dakota', hasTax: true, standardDeduction: 15_000,
         brackets: [
             { min: 0,      max: 44_725, rate: 0.0195 },
             { min: 44_725, max: Infinity, rate: 0.025 },
@@ -311,7 +324,8 @@ const STATE_TAX_DATA: Record<string, StateTaxInfo> = {
         ],
     },
     'South Carolina': {
-        name: 'South Carolina', hasTax: true, standardDeduction: 14_600,
+        // Conforms to federal standard deduction
+        name: 'South Carolina', hasTax: true, standardDeduction: 15_000,
         brackets: [
             { min: 0,      max: 3_460,  rate: 0 },
             { min: 3_460,  max: 17_330, rate: 0.03 },
