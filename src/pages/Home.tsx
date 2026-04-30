@@ -16,6 +16,7 @@ import CreditCardIcon from '@mui/icons-material/CreditCard'
 import AutoGraphIcon from '@mui/icons-material/AutoGraph'
 import ShowChartIcon from '@mui/icons-material/ShowChart'
 import DiamondIcon from '@mui/icons-material/Diamond'
+import SavingsIcon from '@mui/icons-material/Savings'
 
 // finance
 import { useFinance } from '../context/FinanceContext'
@@ -38,24 +39,40 @@ export const Home = () => {
     const features = [
         {
             icon: <AttachMoneyIcon fontSize="large" sx={{ color: '#00C896' }} />,
+            iconBg: 'rgba(0, 200, 150, 0.08)',
+            iconBorder: 'rgba(0, 200, 150, 0.2)',
             title: 'Income',
             description: 'Track every dollar coming in. Monitor salary, side income, dividends, and cash flow trends to understand what you actually earn.',
             navigationPath: '/income',
         },
         {
-            icon: <CreditCardIcon fontSize="large" sx={{ color: '#4F8EF7' }} />,
+            icon: <SavingsIcon fontSize="large" sx={{ color: '#00C896' }} />,
+            iconBg: 'rgba(0, 200, 150, 0.08)',
+            iconBorder: 'rgba(0, 200, 150, 0.2)',
+            title: 'Retirement',
+            description: 'Maximize your 401(k). Set Traditional and Roth contribution rates, track IRS limits, and visualize your path to financial freedom.',
+            navigationPath: '/retirement',
+        },
+        {
+            icon: <CreditCardIcon fontSize="large" sx={{ color: '#FF4D6D' }} />,
+            iconBg: 'rgba(255, 77, 109, 0.08)',
+            iconBorder: 'rgba(255, 77, 109, 0.2)',
             title: 'Debt',
             description: 'See all your balances in one place. Track loans, credit cards, and mortgages — with payoff timelines and interest cost breakdowns.',
             navigationPath: '/debt',
         },
         {
-            icon: <AutoGraphIcon fontSize="large" sx={{ color: '#00C896' }} />,
+            icon: <AutoGraphIcon fontSize="large" sx={{ color: '#4F8EF7' }} />,
+            iconBg: 'rgba(79, 142, 247, 0.08)',
+            iconBorder: 'rgba(79, 142, 247, 0.2)',
             title: 'Investments',
             description: 'Grow your wealth with purpose. Monitor stocks, ETFs, and retirement accounts with clear performance and allocation breakdowns.',
             navigationPath: '/investments',
         },
         {
             icon: <TrendingUpIcon fontSize="large" sx={{ color: '#4F8EF7' }} />,
+            iconBg: 'rgba(79, 142, 247, 0.08)',
+            iconBorder: 'rgba(79, 142, 247, 0.2)',
             title: 'Portfolio Analytics',
             description: 'Track every asset in real time. Visualize performance, allocation, and growth across all your accounts.',
             navigationPath: '/portfolio-analytics',
@@ -204,19 +221,20 @@ export const Home = () => {
                     </Typography>
                 </Box>
 
-                <Grid container spacing={3}>
+                <Grid container spacing={2.5} columns={{ xs: 1, sm: 2, md: 5 }}>
                     {features.map((feature) => (
-                        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={feature.title}>
+                        <Grid size={1} key={feature.title}>
                             <Paper
                                 elevation={0}
                                 onClick={() => navigate(feature.navigationPath)}
                                 sx={{
-                                    p: 3.5,
+                                    p: 3,
                                     height: '100%',
                                     display: 'flex',
                                     flexDirection: 'column',
                                     alignItems: 'flex-start',
                                     gap: 2,
+                                    cursor: 'pointer',
                                     transition: 'transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease',
                                     '&:hover': {
                                         transform: 'translateY(-6px)',
@@ -229,8 +247,8 @@ export const Home = () => {
                                     sx={{
                                         p: 1.5,
                                         borderRadius: 2,
-                                        bgcolor: 'rgba(79, 142, 247, 0.07)',
-                                        border: '1px solid rgba(79, 142, 247, 0.15)',
+                                        bgcolor: feature.iconBg,
+                                        border: `1px solid ${feature.iconBorder}`,
                                         display: 'inline-flex',
                                     }}
                                 >

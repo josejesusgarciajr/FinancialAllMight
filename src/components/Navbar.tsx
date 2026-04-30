@@ -23,6 +23,7 @@ import TrendingDownIcon from '@mui/icons-material/TrendingDown'
 const navLinks = [
     { label: 'Home', path: '/' },
     { label: 'Income', path: '/income' },
+    { label: 'Retirement', path: '/retirement' },
 ]
 
 const ticker = [

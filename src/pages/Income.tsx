@@ -20,6 +20,8 @@ import { useFinance } from '../context/FinanceContext'
 import { DropDownSelect } from '../components/DropDownSelect'
 import { MetricCard } from '../components/MetricCard'
 import { US_STATES, calculateTaxes, stateHasTax } from '../utils/taxes'
+import { useRetirement } from '../hooks/useRetirement'
+import { calculate401KContribution } from '../utils/retirement'
 
 const fmt = (n: number) =>
     n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
@@ -47,6 +49,12 @@ export const Income = () => {
 
     const formattedIncome = hasIncome ? fmt(income!) : '—'
     const noStateTax = hasState && !stateHasTax(filingState)
+
+    // retirement
+    const { _401K, roth401K } = useRetirement()
+    const traditionalAmount = income && _401K > 0 ? calculate401KContribution(income, _401K) : 0
+    const rothAmount = income && roth401K > 0 ? calculate401KContribution(income, roth401K) : 0
+    const hasRetirement = _401K > 0 || roth401K > 0
 
     return (
         <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
@@ -317,17 +325,99 @@ export const Income = () => {
                         </Paper>
                     </Grid>
 
+                    {/* Retirement — full-width horizontal card */}
+                    {(income && hasRetirement) && (
+                        <Grid size={{ xs: 12 }}>
+                            <Paper
+                                elevation={0}
+                                sx={{
+                                    p: 3,
+                                    background: 'linear-gradient(135deg, rgba(0,200,150,0.07) 0%, rgba(79,142,247,0.04) 100%)',
+                                    borderColor: 'rgba(0,200,150,0.25)',
+                                }}
+                            >
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.5 }}>
+                                    <SavingsIcon sx={{ color: 'secondary.main', fontSize: '1.1rem' }} />
+                                    <Typography
+                                        variant="caption"
+                                        sx={{ color: 'secondary.main', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}
+                                    >
+                                        Retirement Contributions
+                                    </Typography>
+                                </Box>
+
+                                <Box sx={{ display: 'flex', alignItems: 'flex-start', flexWrap: { xs: 'wrap', sm: 'nowrap' }, gap: { xs: 3, sm: 0 } }}>
+                                    {_401K > 0 && (
+                                        <Box sx={{ flex: 1, minWidth: 160 }}>
+                                            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                                                Traditional 401(k)
+                                            </Typography>
+                                            <Typography variant="h4" sx={{ fontWeight: 800, color: 'primary.main', lineHeight: 1.1, mt: 0.5 }}>
+                                                {fmt(traditionalAmount)}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                                                {_401K}% of gross · Pre-tax
+                                            </Typography>
+                                        </Box>
+                                    )}
+
+                                    {_401K > 0 && roth401K > 0 && (
+                                        <Divider orientation="vertical" flexItem sx={{ borderColor: 'rgba(0,200,150,0.15)', mx: { xs: 0, sm: 4 } }} />
+                                    )}
+
+                                    {roth401K > 0 && (
+                                        <Box sx={{ flex: 1, minWidth: 160 }}>
+                                            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                                                Roth 401(k)
+                                            </Typography>
+                                            <Typography variant="h4" sx={{ fontWeight: 800, color: 'secondary.main', lineHeight: 1.1, mt: 0.5 }}>
+                                                {fmt(rothAmount)}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                                                {roth401K}% of gross · After-tax
+                                            </Typography>
+                                        </Box>
+                                    )}
+
+                                    {_401K > 0 && roth401K > 0 && (
+                                        <>
+                                            <Divider orientation="vertical" flexItem sx={{ borderColor: 'rgba(0,200,150,0.15)', mx: { xs: 0, sm: 4 } }} />
+                                            <Box sx={{ minWidth: 160 }}>
+                                                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                                                    Total
+                                                </Typography>
+                                                <Typography variant="h4" sx={{ fontWeight: 800, color: 'secondary.main', lineHeight: 1.1, mt: 0.5 }}>
+                                                    {fmt(traditionalAmount + rothAmount)}
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                                                    {(_401K + roth401K).toFixed(1)}% of gross combined
+                                                </Typography>
+                                            </Box>
+                                        </>
+                                    )}
+                                </Box>
+                            </Paper>
+                        </Grid>
+                    )}
+
                     {/* Effective Rate Bar */}
                     {taxes && (
                         <Grid size={{ xs: 12 }}>
                             <Paper elevation={0} sx={{ p: 3 }}>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>
                                     <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
                                         Total Tax Burden
                                     </Typography>
-                                    <Typography variant="body2" sx={{ fontWeight: 700, color: 'error.main' }}>
-                                        {fmt(taxes.totalTax)} · {pct(taxes.effectiveRate)} effective rate
-                                    </Typography>
+                                    <Box sx={{ textAlign: 'right' }}>
+                                        <Typography variant="body2" sx={{ fontWeight: 700, color: 'error.main' }}>
+                                            {fmt(taxes.totalTax)} · {pct(taxes.effectiveRate)} effective rate
+                                        </Typography>
+                                        {hasRetirement && income && (
+                                            <Typography variant="caption" color="text.secondary">
+                                                Retirement savings: <strong style={{ color: '#00C896' }}>{fmt(traditionalAmount + rothAmount)}</strong>
+                                            </Typography>
+                                        )}
+                                    </Box>
                                 </Box>
 
                                 {/* Stacked bar */}
@@ -336,6 +426,8 @@ export const Income = () => {
                                         { value: taxes.federalIncomeTax, color: '#4F8EF7' },
                                         { value: taxes.socialSecurity + taxes.medicare, color: '#93C5FD' },
                                         { value: taxes.stateTax, color: '#F5A623' },
+                                        { value: traditionalAmount, color: '#00C896' },
+                                        { value: rothAmount, color: '#5BE6BC' },
                                     ].map(({ value, color }, i) => (
                                         <Box
                                             key={i}
@@ -353,7 +445,9 @@ export const Income = () => {
                                         { label: 'Federal', color: '#4F8EF7', value: taxes.federalIncomeTax },
                                         { label: 'FICA', color: '#93C5FD', value: taxes.socialSecurity + taxes.medicare },
                                         { label: 'State', color: '#F5A623', value: taxes.stateTax },
-                                        { label: 'Take-Home', color: '#00C896', value: taxes.takeHome },
+                                        ...(_401K > 0 ? [{ label: 'Traditional 401(k)', color: '#00C896', value: traditionalAmount }] : []),
+                                        ...(roth401K > 0 ? [{ label: 'Roth 401(k)', color: '#5BE6BC', value: rothAmount }] : []),
+                                        { label: 'Take-Home', color: '#F0F2F5', value: taxes.takeHome - traditionalAmount - rothAmount },
                                     ].map(({ label, color, value }) => (
                                         <Box key={label} sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
                                             <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: color }} />
