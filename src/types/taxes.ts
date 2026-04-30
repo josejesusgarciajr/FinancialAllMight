@@ -20,4 +20,6 @@ export type TaxBreakdown = {
     totalTax: number
     takeHome: number
     effectiveRate: number
+    traditional401K: number
+    roth401K: number
 }

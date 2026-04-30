@@ -42,11 +42,6 @@ export const Income = () => {
     const hasIncome = income != null && income > 0
     const hasState = filingState.length > 0
 
-    const taxes = useMemo(
-        () => (hasIncome && hasState ? calculateTaxes(income!, filingState) : null),
-        [income, filingState],
-    )
-
     const formattedIncome = hasIncome ? fmt(income!) : '—'
     const noStateTax = hasState && !stateHasTax(filingState)
 
@@ -55,6 +50,11 @@ export const Income = () => {
     const traditionalAmount = income && _401K > 0 ? calculate401KContribution(income, _401K) : 0
     const rothAmount = income && roth401K > 0 ? calculate401KContribution(income, roth401K) : 0
     const hasRetirement = _401K > 0 || roth401K > 0
+
+    const taxes = useMemo(
+        () => (hasIncome && hasState ? calculateTaxes(income!, filingState, traditionalAmount, rothAmount) : null),
+        [income, filingState, traditionalAmount, rothAmount],
+    )
 
     return (
         <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
@@ -447,7 +447,7 @@ export const Income = () => {
                                         { label: 'State', color: '#F5A623', value: taxes.stateTax },
                                         ...(_401K > 0 ? [{ label: 'Traditional 401(k)', color: '#00C896', value: traditionalAmount }] : []),
                                         ...(roth401K > 0 ? [{ label: 'Roth 401(k)', color: '#5BE6BC', value: rothAmount }] : []),
-                                        { label: 'Take-Home', color: '#F0F2F5', value: taxes.takeHome - traditionalAmount - rothAmount },
+                                        { label: 'Take-Home', color: '#F0F2F5', value: taxes.takeHome },
                                     ].map(({ label, color, value }) => (
                                         <Box key={label} sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
                                             <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: color }} />

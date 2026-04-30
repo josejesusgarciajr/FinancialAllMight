@@ -412,10 +412,17 @@ function applyBrackets(taxableIncome: number, brackets: TaxBracket[]): number {
     return tax
 }
 
-export function calculateTaxes(grossIncome: number, stateName: string): TaxBreakdown {
-    const federalTaxable = Math.max(0, grossIncome - FEDERAL_STANDARD_DEDUCTION)
+export function calculateTaxes(
+    grossIncome: number,
+    stateName: string,
+    traditional401K = 0,
+    roth401K = 0,
+): TaxBreakdown {
+    // Traditional 401K is pre-tax: reduces federal and state taxable income
+    const federalTaxable = Math.max(0, grossIncome - FEDERAL_STANDARD_DEDUCTION - traditional401K)
     const federalIncomeTax = applyBrackets(federalTaxable, FEDERAL_BRACKETS)
 
+    // FICA is always calculated on gross wages regardless of 401K type
     const socialSecurity = Math.min(grossIncome, SS_WAGE_BASE) * SS_RATE
     const medicare =
         grossIncome * MEDICARE_RATE +
@@ -424,15 +431,16 @@ export function calculateTaxes(grossIncome: number, stateName: string): TaxBreak
     const stateInfo = STATE_TAX_DATA[stateName]
     let stateTax = 0
     if (stateInfo?.hasTax) {
-        const stateTaxable = Math.max(0, grossIncome - stateInfo.standardDeduction)
+        const stateTaxable = Math.max(0, grossIncome - stateInfo.standardDeduction - traditional401K)
         stateTax = applyBrackets(stateTaxable, stateInfo.brackets)
     }
 
     const totalTax = federalIncomeTax + socialSecurity + medicare + stateTax
-    const takeHome = grossIncome - totalTax
+    // Both Traditional (pre-tax) and Roth (post-tax) reduce take-home cash
+    const takeHome = grossIncome - totalTax - traditional401K - roth401K
     const effectiveRate = grossIncome > 0 ? totalTax / grossIncome : 0
 
-    return { grossIncome, federalIncomeTax, socialSecurity, medicare, stateTax, totalTax, takeHome, effectiveRate }
+    return { grossIncome, federalIncomeTax, socialSecurity, medicare, stateTax, totalTax, takeHome, effectiveRate, traditional401K, roth401K }
 }
 
 export function stateHasTax(stateName: string): boolean {
