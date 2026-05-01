@@ -4,6 +4,7 @@ import { Home } from './pages/Home'
 import { Income } from './pages/Income'
 import { FinanceProvider } from './context/FinanceContext'
 import { Retirement } from './pages/Retirement'
+import { Expenses } from './pages/Expenses'
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
                     <Route path='/' element={<Home />} />
                     <Route path='/income' element={<Income />} />
                     <Route path='/retirement' element={<Retirement />} />
+                    <Route path='expenses' element={<Expenses />} />
                 </Routes>
             </BrowserRouter>
         </FinanceProvider>

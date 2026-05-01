@@ -3,7 +3,7 @@ import { FormControl, InputLabel, MenuItem, Select, type SelectChangeEvent } fro
 type DropDownSelectProps = {
     label: string
     options: string[]
-    value: string
+    value?: string
     onChange: (value: string) => void
     placeholder?: string
 }

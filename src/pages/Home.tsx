@@ -17,6 +17,7 @@ import AutoGraphIcon from '@mui/icons-material/AutoGraph'
 import ShowChartIcon from '@mui/icons-material/ShowChart'
 import DiamondIcon from '@mui/icons-material/Diamond'
 import SavingsIcon from '@mui/icons-material/Savings'
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 
 // finance
 import { useFinance } from '../context/FinanceContext'
@@ -52,6 +53,14 @@ export const Home = () => {
             title: 'Retirement',
             description: 'Maximize your 401(k). Set Traditional and Roth contribution rates, track IRS limits, and visualize your path to financial freedom.',
             navigationPath: '/retirement',
+        },
+        {
+            icon: <ReceiptLongIcon fontSize="large" sx={{ color: '#FF4D6D' }} />,
+            iconBg: 'rgba(255, 77, 109, 0.08)',
+            iconBorder: 'rgba(255, 77, 109, 0.2)',
+            title: 'Expenses',
+            description: 'See where your money goes. Categorize spending, identify trends, and find opportunities to save with clear visualizations.',
+            navigationPath: '/expenses',
         },
         {
             icon: <CreditCardIcon fontSize="large" sx={{ color: '#FF4D6D' }} />,
@@ -221,9 +230,9 @@ export const Home = () => {
                     </Typography>
                 </Box>
 
-                <Grid container spacing={2.5} columns={{ xs: 1, sm: 2, md: 5 }}>
+                <Grid container spacing={2.5}>
                     {features.map((feature) => (
-                        <Grid size={1} key={feature.title}>
+                        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={feature.title}>
                             <Paper
                                 elevation={0}
                                 onClick={() => navigate(feature.navigationPath)}
