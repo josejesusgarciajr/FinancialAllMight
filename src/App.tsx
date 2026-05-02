@@ -5,11 +5,13 @@ import { Income } from './pages/Income'
 import { FinanceProvider } from './context/FinanceContext'
 import { Retirement } from './pages/Retirement'
 import { Expenses } from './pages/Expenses'
+import { ScrollToTop } from './components/ScrollToTop'
 
 function App() {
     return (
         <FinanceProvider>
            <BrowserRouter>
+                <ScrollToTop />
                 <Navbar />
                 <Routes>
                     <Route path='/' element={<Home />} />

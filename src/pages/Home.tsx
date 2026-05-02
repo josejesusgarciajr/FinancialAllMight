@@ -1,7 +1,6 @@
 // material ui
 import {
     Box,
-    Button,
     Container,
     Grid,
     Paper,
@@ -14,7 +13,6 @@ import BoltIcon from '@mui/icons-material/Bolt'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import CreditCardIcon from '@mui/icons-material/CreditCard'
 import AutoGraphIcon from '@mui/icons-material/AutoGraph'
-import ShowChartIcon from '@mui/icons-material/ShowChart'
 import DiamondIcon from '@mui/icons-material/Diamond'
 import SavingsIcon from '@mui/icons-material/Savings'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
@@ -159,7 +157,7 @@ export const Home = () => {
                         spacing={2}
                         sx={{ justifyContent: 'center' }}
                     >
-                        <Button
+                        {/* <Button
                             variant="contained"
                             color="primary"
                             size="large"
@@ -167,7 +165,7 @@ export const Home = () => {
                             sx={{ px: 4, py: 1.5, fontSize: '1rem' }}
                         >
                             Start Investing Smarter
-                        </Button>
+                        </Button> */}
                     </Stack>
                 </Container>
             </Box>

@@ -322,7 +322,7 @@ export const Retirement = () => {
                     </Grid>
 
                     {/* ── IRS Limit Summary ────────────────────────────────────── */}
-                    {hasAnyContribution && income && (
+                    {(hasAnyContribution && !!income) && (
                         <Grid size={{ xs: 12 }}>
                             <Paper elevation={0} sx={{ p: 3 }}>
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>

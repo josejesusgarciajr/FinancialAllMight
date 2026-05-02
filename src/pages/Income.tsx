@@ -36,7 +36,7 @@ export const Income = () => {
 
     useEffect(() => {
         const parsed = Number(draft)
-        if (!isNaN(parsed) && parsed >= 0) addIncome(parsed)
+        parsed > 0 ? addIncome(parsed) : addIncome(NaN)
     }, [draft, addIncome])
 
     const hasIncome = income != null && income > 0
