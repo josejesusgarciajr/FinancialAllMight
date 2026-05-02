@@ -1,15 +1,20 @@
-import React, { useState } from 'react'
+// react
+import React, { useState, useEffect } from 'react'
+
+// material ui
 import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 
-import { ExpenseFrequencyOptions, ExpenseOptions, type ExpenseCategory, type Frequency } from '../../types/expense'
+// finance
+import { ExpenseFrequencyOptions, ExpenseOptions, type Expense, type ExpenseCategory, type Frequency } from '../../types/expense'
 import { DropDownSelect } from '../DropDownSelect'
 
 type AddExpenseFormProps = {
-    addExpense: (expense: string, amount: number, frequency: Frequency, category: ExpenseCategory) => void
+    addUpdateExpense: (expense: string, amount: number, frequency: Frequency, category: ExpenseCategory) => void
+    updatingExpense: Expense | null;
 }
 
-export const AddExpenseForm = ({ addExpense }: AddExpenseFormProps) => {
+export const AddExpenseForm = ({ addUpdateExpense, updatingExpense }: AddExpenseFormProps) => {
     const [expense,   setExpense]   = useState('')
     const [amount,    setAmount]    = useState('')
     const [frequency, setFrequency] = useState<Frequency | ''>('')
@@ -17,19 +22,30 @@ export const AddExpenseForm = ({ addExpense }: AddExpenseFormProps) => {
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
+
         const parsed = parseFloat(amount)
         if (!expense || !parsed || !frequency || !category) return
-        addExpense(expense, parsed, frequency as Frequency, category as ExpenseCategory)
+
+        addUpdateExpense(expense, parsed, frequency as Frequency, category as ExpenseCategory)
         setExpense('')
         setAmount('')
         setFrequency('')
         setCategory('')
     }
 
+    useEffect(() => {
+        if (!updatingExpense) return;
+
+        setExpense(updatingExpense.name)
+        setAmount(String(updatingExpense.amount))
+        setCategory(updatingExpense.category)
+        setFrequency(updatingExpense.frequency)
+    }, [updatingExpense])
+
     return (
         <Paper elevation={0} sx={{ p: 3 }}>
             <Typography variant="h6" sx={{ fontWeight: 700, mb: 3, color: 'text.primary' }}>
-                Add Expense
+                {updatingExpense ? 'Update Expense' : 'Add Expense'}
             </Typography>
 
             <Box component="form" onSubmit={handleSubmit}>
@@ -76,7 +92,7 @@ export const AddExpenseForm = ({ addExpense }: AddExpenseFormProps) => {
                             '&:hover': { bgcolor: '#E03358' },
                         }}
                     >
-                        Add Expense
+                        {updatingExpense ? 'Update Expense' : 'Add Expense'}
                     </Button>
                 </Stack>
             </Box>

@@ -1,3 +1,4 @@
+// material ui
 import {
     Box,
     Chip,
@@ -18,10 +19,12 @@ import SportsEsportsIcon from '@mui/icons-material/SportsEsports'
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline'
 
+// finances
 import { AddExpenseForm } from '../components/Expenses/AddExpenseForm'
 import { useExpenses } from '../hooks/useExpenses'
-import type { Expense, ExpenseCategory, Frequency } from '../types/expense'
+import type { ExpenseCategory, Frequency } from '../types/expense'
 
 const categoryConfig: Record<ExpenseCategory, { icon: React.ReactNode; color: string; bg: string; border: string }> = {
     housing:        { icon: <HomeIcon />,          color: '#FF4D6D', bg: 'rgba(255,77,109,0.08)',   border: 'rgba(255,77,109,0.2)' },
@@ -42,14 +45,22 @@ function toMonthly(amount: number, frequency: Frequency): number {
 import React from 'react'
 
 export const Expenses = () => {
-    const { expenses, addExpense, removeExpense } = useExpenses()
+    const {
+        expenses, addExpense, removeExpense,
+        updateExpense, activeExpense, setActiveExpense
+     } = useExpenses()
 
     const totalMonthly = expenses.reduce((sum, e) => sum + toMonthly(e.amount, e.frequency), 0)
     const totalYearly  = totalMonthly * 12
 
-    function handleAddExpense(name: string, amount: number, frequency: Frequency, category: ExpenseCategory) {
-        const newExpense: Expense = { id: crypto.randomUUID(), name, amount, frequency, category }
-        addExpense(newExpense)
+    function handleAddUpdateExpense(name: string, amount: number, frequency: Frequency, category: ExpenseCategory) {
+        if (activeExpense) {
+            updateExpense({ id: activeExpense.id, name, amount, frequency, category })
+            setActiveExpense(null)
+            return
+        }
+
+        addExpense({ id: crypto.randomUUID(), name, amount, frequency, category })
     }
 
     return (
@@ -109,7 +120,7 @@ export const Expenses = () => {
 
                 {/* Add Expense Form */}
                 <Grid size={{ xs: 12, md: 5 }}>
-                    <AddExpenseForm addExpense={handleAddExpense} />
+                    <AddExpenseForm addUpdateExpense={handleAddUpdateExpense} updatingExpense={activeExpense} />
                 </Grid>
 
                 {/* Expense List */}
@@ -169,6 +180,16 @@ export const Expenses = () => {
                                                 )}
                                             </Box>
 
+                                            <IconButton
+                                                size="small"
+                                                onClick={() => setActiveExpense(expense)}
+                                                sx={{
+                                                    color: 'rgba(79,142,247,0.4)',
+                                                    '&:hover': { color: '#4F8EF7', bgcolor: 'rgba(79,142,247,0.08)' },
+                                                }}
+                                            >
+                                                <DriveFileRenameOutlineIcon fontSize="small" />
+                                            </IconButton>
                                             <IconButton
                                                 size="small"
                                                 onClick={() => removeExpense(expense.id)}
