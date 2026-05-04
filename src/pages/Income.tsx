@@ -36,10 +36,10 @@ export const Income = () => {
 
     useEffect(() => {
         const parsed = Number(draft)
-        parsed > 0 ? addIncome(parsed) : addIncome(NaN)
+        parsed > 0 ? addIncome(parsed) : addIncome(null)
     }, [draft, addIncome])
 
-    const hasIncome = income != null && income > 0
+    const hasIncome = income != null && income > 0 && !isNaN(income)
     const hasState = filingState.length > 0
 
     const formattedIncome = hasIncome ? fmt(income!) : '—'

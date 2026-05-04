@@ -5,6 +5,10 @@ export function getIncome() {
     return income ? Number(income) : null
 }
 
-export function saveIncome(amount: number) {
-    localStorage.setItem('income', amount.toString())
+export function saveIncome(amount: number | null) {
+    if (amount) {
+        localStorage.setItem('income', amount.toString())
+    } else {
+        localStorage.removeItem('income')
+    }
 }

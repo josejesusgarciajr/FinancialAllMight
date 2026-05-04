@@ -4,7 +4,7 @@ import { useTaxes } from '../hooks/useTaxes'
 
 interface FinanceContextType {
     income: number | null;
-    addIncome: (amount: number) => void;
+    addIncome: (amount: number | null) => void;
     filingState: string;
     updateFilingState: (filingState: string) => void;
 }
