@@ -17,7 +17,7 @@ function App() {
                     <Route path='/' element={<Home />} />
                     <Route path='/income' element={<Income />} />
                     <Route path='/retirement' element={<Retirement />} />
-                    <Route path='expenses' element={<Expenses />} />
+                    <Route path='/expenses' element={<Expenses />} />
                 </Routes>
             </BrowserRouter>
         </FinanceProvider>

@@ -152,7 +152,6 @@ export const Income = () => {
                                     fullWidth
                                     value={draft}
                                     onChange={(e) => setDraft(e.target.value)}
-                                    onKeyDown={(e) => { if (e.key === 'Enter') { const p = Number(draft); if (!isNaN(p) && p >= 0) addIncome(p) } }}
                                     slotProps={{
                                         input: {
                                             startAdornment: (
