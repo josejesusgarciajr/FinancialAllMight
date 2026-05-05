@@ -1,4 +1,4 @@
-import type { Expense } from '../types/expense'
+import type { Expense, Frequency } from '../types/expense'
 
 export function getExpenses() : Expense[] {
     const expenses = localStorage.getItem('expenses')
@@ -28,4 +28,10 @@ export function updateExpense(expense: Expense) {
     const existing = getExpenses()
     const updatedExpenses = existing.map((e) => e.id === expense.id ? expense : e)
     localStorage.setItem('expenses', JSON.stringify(updatedExpenses))
+}
+
+export function toMonthly(amount: number, frequency: Frequency): number {
+    if (frequency === 'monthly') return amount
+    if (frequency === 'weekly') return amount * (52 / 12)
+    return amount / 12
 }

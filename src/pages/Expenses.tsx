@@ -25,6 +25,7 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import { useFinance } from '../context/FinanceContext'
 import { AddExpenseForm } from '../components/Expenses/AddExpenseForm'
 import type { ExpenseCategory, Frequency } from '../types/expense'
+import { toMonthly } from '../utils/expenses'
 
 // react
 import React from 'react'
@@ -39,11 +40,6 @@ const categoryConfig: Record<ExpenseCategory, { icon: React.ReactNode; color: st
     other:          { icon: <MoreHorizIcon />,      color: '#94A3B8', bg: 'rgba(148,163,184,0.08)',  border: 'rgba(148,163,184,0.2)' },
 }
 
-function toMonthly(amount: number, frequency: Frequency): number {
-    if (frequency === 'monthly') return amount
-    if (frequency === 'weekly')  return amount * (52 / 12)
-    return amount / 12
-}
 
 export const Expenses = () => {
     const { expenses, addExpense, removeExpense, updateExpense, activeExpense, setActiveExpense } = useFinance()

@@ -17,22 +17,54 @@ import DiamondIcon from '@mui/icons-material/Diamond'
 import SavingsIcon from '@mui/icons-material/Savings'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 
-// finance
-import { useFinance } from '../context/FinanceContext'
+// react
+import { useMemo } from 'react'
 
 // react router
 import { useNavigate } from 'react-router-dom'
 
+// finance
+import { useFinance } from '../context/FinanceContext'
+import { calculateTaxes } from '../utils/taxes'
+import { calculate401KContribution } from '../utils/retirement'
+import { toMonthly } from '../utils/expenses'
+
 export const Home = () => {
 
-    const { income } = useFinance()
+    const { 
+        income,
+        filingState,
+        expenses,
+        _401K, roth401K,
+    } = useFinance()
     const navigate = useNavigate()
 
-    const stats = [
+    const traditionalAmount = income && _401K > 0 ? calculate401KContribution(income, _401K) : 0
+    const rothAmount = income && roth401K > 0 ? calculate401KContribution(income, roth401K) : 0
+
+    const taxes = useMemo(
+        () => income && income > 0 && filingState
+            ? calculateTaxes(income, filingState, traditionalAmount, rothAmount)
+            : null,
+        [income, filingState, traditionalAmount, rothAmount]
+    )
+
+    const monthlyExpenses = useMemo(
+        () => expenses.reduce((sum, e) => sum + toMonthly(e.amount, e.frequency), 0),
+        [expenses]
+    )
+
+    const netMonthlyCashFlow = taxes ? taxes.takeHome / 12 - monthlyExpenses : null
+    const directionPositive = netMonthlyCashFlow != null && netMonthlyCashFlow >= 0
+    const directionValue = netMonthlyCashFlow != null
+        ? `${directionPositive ? '+' : ''}${netMonthlyCashFlow.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}/mo`
+        : '—'
+
+    const stats: { value: string; label: string; accentColor?: string }[] = [
         { value: (income != null && income > 0) ? `$${income.toLocaleString('en-US')}` : '—', label: 'Gross Income' },
         { value: '-', label: 'Total Debt' },
         { value: '-', label: 'Avg. Annual Return' },
-        { value: '-', label: 'Direction' },
+        { value: directionValue, label: 'Direction', accentColor: netMonthlyCashFlow != null ? (directionPositive ? '#00C896' : '#FF4D6D') : undefined },
     ]
 
     const features = [
@@ -188,10 +220,14 @@ export const Home = () => {
                                         variant="h4"
                                         sx={{
                                             fontWeight: 800,
-                                            background: 'linear-gradient(135deg, #4F8EF7, #93C5FD)',
-                                            backgroundClip: 'text',
-                                            WebkitBackgroundClip: 'text',
-                                            WebkitTextFillColor: 'transparent',
+                                            ...(stat.accentColor
+                                                ? { color: stat.accentColor }
+                                                : {
+                                                    background: 'linear-gradient(135deg, #4F8EF7, #93C5FD)',
+                                                    backgroundClip: 'text',
+                                                    WebkitBackgroundClip: 'text',
+                                                    WebkitTextFillColor: 'transparent',
+                                                }),
                                             mb: 0.5,
                                         }}
                                     >
