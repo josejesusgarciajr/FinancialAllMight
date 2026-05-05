@@ -22,9 +22,12 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline'
 
 // finances
+import { useFinance } from '../context/FinanceContext'
 import { AddExpenseForm } from '../components/Expenses/AddExpenseForm'
-import { useExpenses } from '../hooks/useExpenses'
 import type { ExpenseCategory, Frequency } from '../types/expense'
+
+// react
+import React from 'react'
 
 const categoryConfig: Record<ExpenseCategory, { icon: React.ReactNode; color: string; bg: string; border: string }> = {
     housing:        { icon: <HomeIcon />,          color: '#FF4D6D', bg: 'rgba(255,77,109,0.08)',   border: 'rgba(255,77,109,0.2)' },
@@ -42,13 +45,8 @@ function toMonthly(amount: number, frequency: Frequency): number {
     return amount / 12
 }
 
-import React from 'react'
-
 export const Expenses = () => {
-    const {
-        expenses, addExpense, removeExpense,
-        updateExpense, activeExpense, setActiveExpense
-     } = useExpenses()
+    const { expenses, addExpense, removeExpense, updateExpense, activeExpense, setActiveExpense } = useFinance()
 
     const totalMonthly = expenses.reduce((sum, e) => sum + toMonthly(e.amount, e.frequency), 0)
     const totalYearly  = totalMonthly * 12

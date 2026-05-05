@@ -20,7 +20,6 @@ import { useFinance } from '../context/FinanceContext'
 import { DropDownSelect } from '../components/DropDownSelect'
 import { MetricCard } from '../components/MetricCard'
 import { US_STATES, calculateTaxes, stateHasTax } from '../utils/taxes'
-import { useRetirement } from '../hooks/useRetirement'
 import { calculate401KContribution } from '../utils/retirement'
 
 const fmt = (n: number) =>
@@ -31,7 +30,11 @@ const pct = (n: number) => `${(n * 100).toFixed(1)}%`
 // ─── Page ────────────────────────────────────────────────────────────────────
 
 export const Income = () => {
-    const { income, addIncome, filingState, updateFilingState } = useFinance()
+    const { 
+        income, addIncome,
+        filingState, updateFilingState,
+         _401K, roth401K 
+    } = useFinance()
     const [draft, setDraft] = useState<string>(income != null ? income.toString() : '')
 
     useEffect(() => {
@@ -46,7 +49,6 @@ export const Income = () => {
     const noStateTax = hasState && !stateHasTax(filingState)
 
     // retirement
-    const { _401K, roth401K } = useRetirement()
     const traditionalAmount = income && _401K > 0 ? calculate401KContribution(income, _401K) : 0
     const rothAmount = income && roth401K > 0 ? calculate401KContribution(income, roth401K) : 0
     const hasRetirement = _401K > 0 || roth401K > 0

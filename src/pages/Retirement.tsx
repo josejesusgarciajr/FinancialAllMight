@@ -16,7 +16,6 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 
 import { useFinance } from '../context/FinanceContext'
-import { useRetirement } from '../hooks/useRetirement'
 import { calculate401KContribution } from '../utils/retirement'
 
 const fmt = (n: number) =>
@@ -25,8 +24,10 @@ const fmt = (n: number) =>
 const IRS_LIMIT_2025 = 23_500
 
 export const Retirement = () => {
-    const { income } = useFinance()
-    const { _401K, handle401KChange, roth401K, handleRoth401KChange } = useRetirement()
+    const { 
+        income,
+        _401K, handle401KChange, roth401K, handleRoth401KChange 
+     } = useFinance()
 
     const [traditionalDraft, setTraditionalDraft] = useState(_401K.toString())
     const [rothDraft, setRothDraft] = useState(roth401K.toString())
