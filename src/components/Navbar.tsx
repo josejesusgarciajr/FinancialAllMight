@@ -29,10 +29,10 @@ const navLinks = [
 
 const ticker = [
     { symbol: 'FXAIX', price: '251.32', change: '+1.24%', up: true },
-    { symbol: 'AAPL', price: '213.45', change: '+0.82%', up: true },
-    { symbol: 'DIS', price: '183.92', change: '+0.41%', up: false },
+    { symbol: 'AAPL', price: '213.45', change: '-0.82%', up: false },
+    { symbol: 'DIS', price: '183.92', change: '+0.41%', up: true },
     { symbol: 'JPM', price: '307.43', change: '+3.12%', up: true },
-    { symbol: 'ETH', price: '3,241', change: '+1.74%', up: true },
+    { symbol: 'ETH', price: '3,241', change: '-1.74%', up: false },
     { symbol: 'NVDA', price: '875.23', change: '+2.31%', up: true },
     { symbol: 'AMZN', price: '189.45', change: '-0.18%', up: false },
     { symbol: 'GOOGL', price: '178.90', change: '+0.93%', up: true },
