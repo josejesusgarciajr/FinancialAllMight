@@ -12,10 +12,10 @@ import { DropDownSelect } from '../DropDownSelect'
 type AddExpenseFormProps = {
     addUpdateExpense: (expense: string, amount: number, frequency: Frequency, category: ExpenseCategory) => void
     updatingExpense: Expense | null;
-    maxHeight?: number;
+    height: number;
 }
 
-export const AddExpenseForm = ({ addUpdateExpense, updatingExpense, maxHeight = 420 }: AddExpenseFormProps) => {
+export const AddExpenseForm = ({ addUpdateExpense, updatingExpense, height }: AddExpenseFormProps) => {
     const [expense,   setExpense]   = useState('')
     const [amount,    setAmount]    = useState('')
     const [frequency, setFrequency] = useState<Frequency | ''>('')
@@ -44,7 +44,7 @@ export const AddExpenseForm = ({ addUpdateExpense, updatingExpense, maxHeight = 
     }, [updatingExpense])
 
     return (
-        <Paper elevation={0} sx={{ p: 3, width: '100%', height: maxHeight }}>
+        <Paper elevation={0} sx={{ p: 3, width: '100%', height }}>
             <Typography variant="h6" sx={{ fontWeight: 700, mb: 3, color: 'text.primary' }}>
                 {updatingExpense ? 'Update Expense' : 'Add Expense'}
             </Typography>

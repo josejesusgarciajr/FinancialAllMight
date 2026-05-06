@@ -18,7 +18,7 @@ import { toMonthly } from '../utils/expenses'
 // react
 import { ExpenseList } from '../components/Expenses/ExpenseList'
 
-const formExpenseListHeight = 420;
+const FORM_HEIGHT = 420;
 
 export const Expenses = () => {
     const { expenses, addExpense, removeExpense, updateExpense, activeExpense, setActiveExpense } = useFinance()
@@ -93,7 +93,7 @@ export const Expenses = () => {
 
                 {/* Add Expense Form */}
                 <Grid size={{ xs: 12, md: 5 }} sx={{ display: 'flex' }}>
-                    <AddExpenseForm addUpdateExpense={handleAddUpdateExpense} updatingExpense={activeExpense} maxHeight={formExpenseListHeight}/>
+                    <AddExpenseForm addUpdateExpense={handleAddUpdateExpense} updatingExpense={activeExpense} height={FORM_HEIGHT} />
                 </Grid>
 
                 {/* Expense List */}
@@ -102,7 +102,7 @@ export const Expenses = () => {
                         expenses={expenses}
                         setActiveExpense={setActiveExpense}
                         removeExpense={removeExpense}
-                        maxHeight={formExpenseListHeight}
+                        maxHeight={FORM_HEIGHT}
                     />
                 </Grid>
             </Grid>
