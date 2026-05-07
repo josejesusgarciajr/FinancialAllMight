@@ -1,12 +1,11 @@
 // material ui
 import {
     Box,
-    Button,
-    ButtonGroup,
     Container,
     Grid,
     Paper,
-    Stack,
+    ToggleButton,
+    ToggleButtonGroup,
     Typography,
 } from '@mui/material'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
@@ -52,32 +51,49 @@ export const Expenses = () => {
     }, [category, expenses])
 
     return (
-        <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
+        <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
 
-            {/* Header */}
-            <Box sx={{ mb: 5 }}>
-                <Stack direction="row" spacing={1.5} sx={{ mb: 1, alignItems: 'center' }}>
-                    <Box sx={{
-                        p: 1, borderRadius: 2, display: 'inline-flex',
-                        bgcolor: 'rgba(255,77,109,0.08)',
-                        border: '1px solid rgba(255,77,109,0.2)',
-                    }}>
-                        <ReceiptLongIcon sx={{ color: '#FF4D6D' }} />
+            {/* ── Page Header ──────────────────────────────────────────────── */}
+            <Box
+                sx={{
+                    background: 'linear-gradient(135deg, #070B14 0%, #0A1628 50%, #0F1923 100%)',
+                    borderBottom: '1px solid rgba(79, 142, 247, 0.15)',
+                    py: { xs: 5, md: 7 },
+                }}
+            >
+                <Container maxWidth="lg">
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1.5 }}>
+                        <Box
+                            sx={{
+                                p: 1.25, borderRadius: 2,
+                                bgcolor: 'rgba(255, 77, 109, 0.1)',
+                                border: '1px solid rgba(255, 77, 109, 0.25)',
+                                display: 'inline-flex',
+                            }}
+                        >
+                            <ReceiptLongIcon sx={{ fontSize: '1.75rem', color: '#FF4D6D' }} />
+                        </Box>
+                        <Typography
+                            variant="h4"
+                            sx={{
+                                fontWeight: 800,
+                                background: 'linear-gradient(135deg, #F0F2F5 50%, #FF4D6D 100%)',
+                                backgroundClip: 'text',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                letterSpacing: '-0.01em',
+                            }}
+                        >
+                            Expenses
+                        </Typography>
                     </Box>
-                    <Typography variant="h4" sx={{
-                        fontWeight: 800,
-                        background: 'linear-gradient(135deg, #F0F2F5 50%, #FF4D6D 100%)',
-                        backgroundClip: 'text',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                    }}>
-                        Expenses
+                    <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 520, lineHeight: 1.7 }}>
+                        Track and categorize your recurring expenses to understand where your money goes.
                     </Typography>
-                </Stack>
-                <Typography variant="body1" color="text.secondary" sx={{ ml: 7 }}>
-                    Track and categorize your recurring expenses.
-                </Typography>
+                </Container>
             </Box>
+
+            <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
 
             {/* Summary Strip */}
             <Grid container spacing={2} sx={{ mb: 4 }}>
@@ -104,18 +120,58 @@ export const Expenses = () => {
             </Grid>
 
             {/* Categories Options */}
-            <ButtonGroup size="small" aria-label="Small button group">
-                {categories.map((category) => {
-                    return (
-                        <Button 
-                            value={category}
-                            onClick={() => setCategory(category as ExpenseCategory)}
+            <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
+                <ToggleButtonGroup
+                    value={category}
+                    exclusive
+                    onChange={(_, val) => { if (val !== null) setCategory(val as ExpenseCategory | 'All') }}
+                    size="small"
+                    aria-label="expense category filter"
+                    sx={{
+                        flexWrap: 'wrap',
+                        gap: 0.5,
+                        bgcolor: '#0F1923',
+                        border: '1px solid rgba(255,77,109,0.15)',
+                        borderRadius: 2,
+                        p: 0.5,
+                        '& .MuiToggleButtonGroup-grouped': {
+                            border: 'none !important',
+                            borderRadius: '6px !important',
+                        },
+                    }}
+                >
+                    {categories.map((cat) => (
+                        <ToggleButton
+                            key={cat}
+                            value={cat}
+                            sx={{
+                                px: 2,
+                                py: 0.6,
+                                fontSize: '0.72rem',
+                                fontWeight: 600,
+                                textTransform: 'capitalize',
+                                color: 'text.secondary',
+                                letterSpacing: '0.04em',
+                                transition: 'all 0.15s ease',
+                                '&.Mui-selected': {
+                                    color: '#FF4D6D',
+                                    bgcolor: 'rgba(255,77,109,0.12)',
+                                    boxShadow: '0 0 0 1px rgba(255,77,109,0.35)',
+                                },
+                                '&.Mui-selected:hover': {
+                                    bgcolor: 'rgba(255,77,109,0.18)',
+                                },
+                                '&:hover': {
+                                    bgcolor: 'rgba(255,77,109,0.06)',
+                                    color: '#FF4D6D',
+                                },
+                            }}
                         >
-                            {category}
-                        </Button>
-                    )
-                })}
-            </ButtonGroup>
+                            {cat}
+                        </ToggleButton>
+                    ))}
+                </ToggleButtonGroup>
+            </Box>
 
             {/* Form + List */}
             <Grid container spacing={3} sx={{ alignItems: 'flex-start' }}>
@@ -135,6 +191,7 @@ export const Expenses = () => {
                     />
                 </Grid>
             </Grid>
-        </Container>
+            </Container>
+        </Box>
     )
 }
