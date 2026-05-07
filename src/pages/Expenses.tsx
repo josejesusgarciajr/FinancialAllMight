@@ -1,6 +1,8 @@
 // material ui
 import {
     Box,
+    Button,
+    ButtonGroup,
     Container,
     Grid,
     Paper,
@@ -12,16 +14,19 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 // finances
 import { useFinance } from '../context/FinanceContext'
 import { AddExpenseForm } from '../components/Expenses/AddExpenseForm'
+import { ExpenseList } from '../components/Expenses/ExpenseList'
 import type { ExpenseCategory, Frequency } from '../types/expense'
 import { toMonthly } from '../utils/expenses'
 
 // react
-import { ExpenseList } from '../components/Expenses/ExpenseList'
+import { useState, useMemo } from 'react'
 
 const FORM_HEIGHT = 420;
+const categories = ['All', 'housing', 'food', 'transportation', 'utilities', 'entertainment', 'healthcare', 'other']
 
 export const Expenses = () => {
     const { expenses, addExpense, removeExpense, updateExpense, activeExpense, setActiveExpense } = useFinance()
+    const [category, setCategory] = useState<ExpenseCategory | 'All'>('All');
 
     const totalMonthly = expenses.reduce((sum, e) => sum + toMonthly(e.amount, e.frequency), 0)
     const totalYearly  = totalMonthly * 12
@@ -35,6 +40,16 @@ export const Expenses = () => {
 
         addExpense({ id: crypto.randomUUID(), name, amount, frequency, category })
     }
+
+    const expensesByCategory = useMemo(() => {
+        return (
+            expenses.filter((expense) => {
+                return (
+                    expense.category === category || category === 'All'
+                )
+            })
+        )
+    }, [category, expenses])
 
     return (
         <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
@@ -88,6 +103,20 @@ export const Expenses = () => {
                 </Grid>
             </Grid>
 
+            {/* Categories Options */}
+            <ButtonGroup size="small" aria-label="Small button group">
+                {categories.map((category) => {
+                    return (
+                        <Button 
+                            value={category}
+                            onClick={() => setCategory(category as ExpenseCategory)}
+                        >
+                            {category}
+                        </Button>
+                    )
+                })}
+            </ButtonGroup>
+
             {/* Form + List */}
             <Grid container spacing={3} sx={{ alignItems: 'flex-start' }}>
 
@@ -99,7 +128,7 @@ export const Expenses = () => {
                 {/* Expense List */}
                 <Grid size={{ xs: 12, md: 7 }} sx={{ display: 'flex' }}>
                     <ExpenseList
-                        expenses={expenses}
+                        expenses={expensesByCategory}
                         setActiveExpense={setActiveExpense}
                         removeExpense={removeExpense}
                         maxHeight={FORM_HEIGHT}
