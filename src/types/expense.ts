@@ -9,13 +9,14 @@ export type Expense = {
 export type Frequency  = 'monthly' | 'yearly' | 'weekly'
 export type ExpenseCategory = 'housing' | 'food' | 'transportation' | 'utilities' | 'entertainment' | 'healthcare' | 'other'
 
-export const ExpenseOptions = [
+export const ExpenseOptions: ExpenseCategory[] = [
     'housing',
-    'food', 'transportation',
+    'food',
+    'transportation',
     'utilities',
     'entertainment',
     'healthcare',
-    'other'
+    'other',
 ]
 
 export const ExpenseFrequencyOptions = [

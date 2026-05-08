@@ -14,21 +14,18 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 import { useFinance } from '../context/FinanceContext'
 import { AddExpenseForm } from '../components/Expenses/AddExpenseForm'
 import { ExpenseList } from '../components/Expenses/ExpenseList'
-import type { ExpenseCategory, Frequency } from '../types/expense'
+import { ExpenseOptions, type ExpenseCategory, type Frequency } from '../types/expense'
 import { toMonthly } from '../utils/expenses'
 
 // react
 import { useState, useMemo } from 'react'
 
 const FORM_HEIGHT = 420;
-const categories = ['All', 'housing', 'food', 'transportation', 'utilities', 'entertainment', 'healthcare', 'other']
+const categories: ('All' | ExpenseCategory)[] = ['All', ...ExpenseOptions]
 
 export const Expenses = () => {
     const { expenses, addExpense, removeExpense, updateExpense, activeExpense, setActiveExpense } = useFinance()
     const [category, setCategory] = useState<ExpenseCategory | 'All'>('All');
-
-    const totalMonthly = expenses.reduce((sum, e) => sum + toMonthly(e.amount, e.frequency), 0)
-    const totalYearly  = totalMonthly * 12
 
     function handleAddUpdateExpense(name: string, amount: number, frequency: Frequency, category: ExpenseCategory) {
         if (activeExpense) {
@@ -49,6 +46,9 @@ export const Expenses = () => {
             })
         )
     }, [category, expenses])
+
+    const totalMonthly = expensesByCategory.reduce((sum, e) => sum + toMonthly(e.amount, e.frequency), 0)
+    const totalYearly  = totalMonthly * 12
 
     return (
         <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
