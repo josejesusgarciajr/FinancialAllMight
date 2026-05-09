@@ -14,9 +14,10 @@ import {
 import SavingsIcon from '@mui/icons-material/Savings'
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 import TrendingUpIcon from '@mui/icons-material/TrendingUp'
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter'
 
 import { useFinance } from '../context/FinanceContext'
-import { calculate401KContribution } from '../utils/retirement'
+import { calculate401KContribution, calculateEmployerMatch } from '../utils/retirement'
 
 const fmt = (n: number) =>
     n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
@@ -26,18 +27,21 @@ const IRS_LIMIT_2025 = 23_500
 export const Retirement = () => {
     const { 
         income,
-        _401K, handle401KChange, roth401K, handleRoth401KChange 
+        _401K, handle401KChange, roth401K, handleRoth401KChange, employerMatch, handleEmployerMatchChange
      } = useFinance()
 
     const [traditionalDraft, setTraditionalDraft] = useState(_401K.toString())
     const [rothDraft, setRothDraft] = useState(roth401K.toString())
+    const [employerMatchDraft, setEmployerMatchDraft] = useState(employerMatch.toString())
 
     const traditionalAmount = income && _401K > 0 ? calculate401KContribution(income, _401K) : 0
     const rothAmount = income && roth401K > 0 ? calculate401KContribution(income, roth401K) : 0
+    const employerMatchAmount = income && employerMatch > 0 ? calculateEmployerMatch(income, employerMatch) : 0
     const totalRetirement = traditionalAmount + rothAmount
+    const totalWithEmployer = totalRetirement + employerMatchAmount
     const limitPct = Math.min((totalRetirement / IRS_LIMIT_2025) * 100, 100)
     const isOverLimit = totalRetirement > IRS_LIMIT_2025
-    const hasAnyContribution = _401K > 0 || roth401K > 0
+    const hasAnyContribution = _401K > 0 || roth401K > 0 || employerMatch > 0
 
     const inputFieldSx = (color: string) => ({
         '& .MuiOutlinedInput-root': {
@@ -322,6 +326,168 @@ export const Retirement = () => {
                         </Paper>
                     </Grid>
 
+                    {/* ── Employer Match ──────────────────────────────────────── */}
+                    <Grid size={{ xs: 12, md: 6 }}>
+                        <Paper
+                            elevation={0}
+                            sx={{
+                                p: 3.5,
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 2.5,
+                                borderColor: employerMatch > 0 ? 'rgba(245,166,35,0.3)' : undefined,
+                                transition: 'border-color 0.2s',
+                            }}
+                        >
+                            <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                                <Box>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                                        <BusinessCenterIcon sx={{ color: '#F5A623', fontSize: '1.25rem' }} />
+                                        <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                                            Employer Match
+                                        </Typography>
+                                    </Box>
+                                    <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+                                        Free money from your employer — doesn't count toward the employee IRS limit.
+                                    </Typography>
+                                </Box>
+                                <Chip
+                                    label="Employer"
+                                    size="small"
+                                    sx={{
+                                        bgcolor: 'rgba(245,166,35,0.1)',
+                                        color: '#F5A623',
+                                        border: '1px solid rgba(245,166,35,0.25)',
+                                        fontWeight: 600,
+                                        flexShrink: 0,
+                                        ml: 1,
+                                    }}
+                                />
+                            </Box>
+
+                            <TextField
+                                type="number"
+                                label="Employer Match Rate"
+                                value={employerMatchDraft}
+                                onChange={(e) => {
+                                    setEmployerMatchDraft(e.target.value)
+                                    const v = parseFloat(e.target.value)
+                                    if ((v >= 0 && v <= 100) || isNaN(v)) handleEmployerMatchChange(v)
+                                }}
+                                slotProps={{
+                                    input: {
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <Typography sx={{ color: 'text.secondary', fontWeight: 600 }}>%</Typography>
+                                            </InputAdornment>
+                                        ),
+                                    },
+                                    htmlInput: { min: 0, max: 100, step: 0.5 },
+                                }}
+                                sx={inputFieldSx('#F5A623')}
+                            />
+
+                            {income ? (
+                                <Box
+                                    sx={{
+                                        p: 2,
+                                        borderRadius: 2,
+                                        bgcolor: employerMatch > 0 ? 'rgba(245,166,35,0.06)' : 'rgba(255,255,255,0.02)',
+                                        border: '1px solid',
+                                        borderColor: employerMatch > 0 ? 'rgba(245,166,35,0.2)' : 'rgba(79,142,247,0.06)',
+                                        transition: 'all 0.2s',
+                                    }}
+                                >
+                                    <Typography
+                                        variant="h3"
+                                        sx={{
+                                            fontWeight: 800,
+                                            color: employerMatch > 0 ? '#F5A623' : 'text.disabled',
+                                            lineHeight: 1.1,
+                                            mb: 0.75,
+                                        }}
+                                    >
+                                        {employerMatch > 0 ? fmt(employerMatchAmount) : '—'}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {employerMatch > 0
+                                            ? `${employerMatch}% of ${fmt(income)} · ${fmt(employerMatchAmount / 26)}/paycheck (biweekly)`
+                                            : 'Enter your employer match rate above'}
+                                    </Typography>
+                                </Box>
+                            ) : (
+                                <Box
+                                    sx={{
+                                        p: 2, borderRadius: 2,
+                                        bgcolor: 'rgba(255,255,255,0.02)',
+                                        border: '1px solid rgba(79,142,247,0.06)',
+                                    }}
+                                >
+                                    <Typography variant="body2" color="text.disabled">
+                                        Set your income on the Income tab to see dollar amounts.
+                                    </Typography>
+                                </Box>
+                            )}
+                        </Paper>
+                    </Grid>
+
+                    {/* ── Total Retirement Summary ─────────────────────────────── */}
+                    {(hasAnyContribution && !!income && employerMatch > 0) && (
+                        <Grid size={{ xs: 12, md: 6 }}>
+                            <Paper
+                                elevation={0}
+                                sx={{
+                                    p: 3.5,
+                                    height: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 2,
+                                    borderColor: 'rgba(0,200,150,0.2)',
+                                }}
+                            >
+                                <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                                    Total Annual Contributions
+                                </Typography>
+                                {[
+                                    { label: 'Traditional 401(k)', color: '#4F8EF7', value: traditionalAmount },
+                                    { label: 'Roth 401(k)', color: '#00C896', value: rothAmount },
+                                    { label: 'Employer Match', color: '#F5A623', value: employerMatchAmount },
+                                ].map(({ label, color, value }) => (
+                                    <Box key={label} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: color }} />
+                                            <Typography variant="body2" color="text.secondary">{label}</Typography>
+                                        </Box>
+                                        <Typography variant="body2" sx={{ fontWeight: 700, color }}>
+                                            {value > 0 ? fmt(value) : '—'}
+                                        </Typography>
+                                    </Box>
+                                ))}
+                                <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.08)', pt: 1.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Typography variant="body2" sx={{ fontWeight: 700, color: 'text.primary' }}>
+                                        Total
+                                    </Typography>
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            fontWeight: 800,
+                                            background: 'linear-gradient(135deg, #00C896 0%, #4F8EF7 100%)',
+                                            backgroundClip: 'text',
+                                            WebkitBackgroundClip: 'text',
+                                            WebkitTextFillColor: 'transparent',
+                                        }}
+                                    >
+                                        {fmt(totalWithEmployer)}
+                                    </Typography>
+                                </Box>
+                                <Typography variant="caption" color="text.secondary">
+                                    {fmt(totalWithEmployer / 26)}/paycheck (biweekly) · {((totalWithEmployer / (income ?? 1)) * 100).toFixed(1)}% of gross income
+                                </Typography>
+                            </Paper>
+                        </Grid>
+                    )}
+
                     {/* ── IRS Limit Summary ────────────────────────────────────── */}
                     {(hasAnyContribution && !!income) && (
                         <Grid size={{ xs: 12 }}>
@@ -374,6 +540,7 @@ export const Retirement = () => {
                                     {[
                                         { label: 'Traditional 401(k)', color: '#4F8EF7', value: traditionalAmount },
                                         { label: 'Roth 401(k)', color: '#00C896', value: rothAmount },
+                                        ...(employerMatch > 0 ? [{ label: 'Employer Match*', color: '#F5A623', value: employerMatchAmount }] : []),
                                         { label: 'Remaining Limit', color: 'rgba(255,255,255,0.25)', value: Math.max(0, IRS_LIMIT_2025 - totalRetirement) },
                                     ].map(({ label, color, value }) => (
                                         <Box key={label} sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
@@ -384,6 +551,11 @@ export const Retirement = () => {
                                         </Box>
                                     ))}
                                 </Box>
+                                {employerMatch > 0 && (
+                                    <Typography variant="caption" color="text.disabled" sx={{ display: 'block', mt: 1 }}>
+                                        * Employer match does not count toward the $23,500 employee contribution limit.
+                                    </Typography>
+                                )}
                             </Paper>
                         </Grid>
                     )}
