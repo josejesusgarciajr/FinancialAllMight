@@ -433,7 +433,7 @@ export const Retirement = () => {
                     </Grid>
 
                     {/* ── Total Retirement Summary ─────────────────────────────── */}
-                    {(hasAnyContribution && !!income && employerMatch > 0) && (
+                    {(hasAnyContribution && !!income) && (
                         <Grid size={{ xs: 12, md: 6 }}>
                             <Paper
                                 elevation={0}
