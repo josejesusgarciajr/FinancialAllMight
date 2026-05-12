@@ -4,11 +4,15 @@ import { useTaxes } from '../hooks/useTaxes'
 import { useExpenses } from '../hooks/useExpenses';
 import type { Expense } from '../types/expense';
 import { useRetirement } from '../hooks/useRetirement';
+import type { PayRate } from '../types/income'
 
 interface FinanceContextType {
     // income
+    payRate: PayRate | '';
+    handlePayRateChange: (newPayRate: PayRate | '') => void;
+    incomeRate: number | null;
+    handleIncomeRateChange: (newIncomeRate: number | null) => void;
     income: number | null;
-    addIncome: (amount: number | null) => void;
     // taxes
     filingState: string;
     updateFilingState: (filingState: string) => void;
@@ -31,7 +35,7 @@ interface FinanceContextType {
 const FinanceContext = createContext<FinanceContextType | null>(null)
 
 export function FinanceProvider({ children }: { children: ReactNode }) {
-    const { income, addIncome } = useIncome()
+    const { payRate, handlePayRateChange, incomeRate, handleIncomeRateChange, income } = useIncome()
     const { filingState, updateFilingState } = useTaxes()
     const {        
         _401K, handle401KChange, 
@@ -46,7 +50,7 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
     return (
         <FinanceContext.Provider value={{
                 // income
-                income, addIncome,
+                payRate, handlePayRateChange, incomeRate, handleIncomeRateChange, income,
                 // taxes
                 filingState, updateFilingState,
                 // retirement

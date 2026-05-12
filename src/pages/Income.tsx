@@ -1,4 +1,7 @@
-import { useState, useEffect, useMemo } from 'react'
+// react
+import { useState, useEffect, useMemo, useRef } from 'react'
+
+// material ui
 import {
     Box,
     Container,
@@ -16,11 +19,14 @@ import LocationOnIcon from '@mui/icons-material/LocationOn'
 import SavingsIcon from '@mui/icons-material/Savings'
 import PercentIcon from '@mui/icons-material/Percent'
 
+// finances
 import { useFinance } from '../context/FinanceContext'
 import { DropDownSelect } from '../components/DropDownSelect'
 import { MetricCard } from '../components/MetricCard'
 import { US_STATES, calculateTaxes, stateHasTax } from '../utils/taxes'
 import { calculate401KContribution } from '../utils/retirement'
+import type { PayRate } from '../types/income'
+import { PAY_RATES } from '../types/income'
 
 const fmt = (n: number) =>
     n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
@@ -31,16 +37,11 @@ const pct = (n: number) => `${(n * 100).toFixed(1)}%`
 
 export const Income = () => {
     const { 
-        income, addIncome,
+        payRate, handlePayRateChange, incomeRate, handleIncomeRateChange, income,
         filingState, updateFilingState,
          _401K, roth401K 
     } = useFinance()
-    const [draft, setDraft] = useState<string>(income != null ? income.toString() : '')
-
-    useEffect(() => {
-        const parsed = Number(draft)
-        parsed > 0 ? addIncome(parsed) : addIncome(null)
-    }, [draft, addIncome])
+    const [draft, setDraft] = useState<string>(incomeRate != null ? incomeRate.toString() : '')
 
     const hasIncome = income != null && income > 0 && !isNaN(income)
     const hasState = filingState.length > 0
@@ -57,6 +58,26 @@ export const Income = () => {
         () => (hasIncome && hasState ? calculateTaxes(income!, filingState, traditionalAmount, rothAmount) : null),
         [income, filingState, traditionalAmount, rothAmount],
     )
+
+    const payRateText = payRate === 'Hourly' ? 'hourly rate' : 'salary income' 
+
+    const prevPayRate = useRef(payRate)
+
+    useEffect(() => {
+        const parsed = Number(draft)
+        parsed > 0 ? handleIncomeRateChange(parsed) : handleIncomeRateChange(null)
+    }, [draft, handleIncomeRateChange])
+
+    useEffect(() => {
+        if (prevPayRate.current === payRate) return;
+
+        // update previous pay rate ref
+        prevPayRate.current = payRate;
+
+        // Reset income rate and draft when pay cycle changes
+        setDraft('');
+        handleIncomeRateChange(null);
+    }, [payRate, handleIncomeRateChange])
 
     return (
         <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
@@ -111,7 +132,7 @@ export const Income = () => {
                                 variant="caption"
                                 sx={{ color: 'text.secondary', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}
                             >
-                                Gross Income
+                                Annual Gross Income
                             </Typography>
                             <Typography
                                 variant="h3"
@@ -139,17 +160,26 @@ export const Income = () => {
                     <Grid size={{ xs: 12, md: 8 }}>
                         <Paper elevation={0} sx={{ p: 3.5, display: 'flex', flexDirection: 'column', gap: 3 }}>
 
+                            {/* Pay cycle selector */}
+                            <DropDownSelect
+                                label="Pay Cycle"
+                                options={PAY_RATES}
+                                value={payRate}
+                                onChange={(value) => handlePayRateChange(value as PayRate)}
+                                placeholder="Select a pay rate…"
+                            />
+
                             {/* Income input */}
                             <Box>
                                 <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
                                     Update Income
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary" sx={{ mb: 2, lineHeight: 1.6 }}>
-                                    Enter your total annual income.
+                                    Enter your {payRateText}
                                 </Typography>
                                 <TextField
                                     type="number"
-                                    label="Annual Income"
+                                    label={payRateText}
                                     placeholder="0"
                                     fullWidth
                                     value={draft}
