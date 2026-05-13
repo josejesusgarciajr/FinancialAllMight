@@ -320,40 +320,19 @@ export const Income = () => {
 
                     {/* Take-Home */}
                     <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                        <Paper
-                            elevation={0}
-                            sx={{
-                                p: 3,
-                                height: '100%',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 1,
-                                opacity: taxes ? 1 : 0.45,
-                                transition: 'opacity 0.2s',
-                                background: taxes
-                                    ? 'linear-gradient(135deg, rgba(0,200,150,0.08) 0%, rgba(0,153,112,0.04) 100%)'
-                                    : undefined,
-                                borderColor: taxes ? 'rgba(0,200,150,0.25)' : 'rgba(79,142,247,0.06)',
-                            }}
-                        >
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-                                <SavingsIcon sx={{ color: 'secondary.main', fontSize: '1.1rem' }} />
-                                <Typography
-                                    variant="caption"
-                                    sx={{ color: 'secondary.main', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}
-                                >
-                                    Take-Home Pay
-                                </Typography>
-                            </Box>
-                            <Typography variant="h4" sx={{ fontWeight: 800, color: 'secondary.main', lineHeight: 1.1 }}>
-                                {taxes ? fmt(taxes.takeHome) : '—'}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1.5 }}>
-                                {taxes
+                        <MetricCard
+                            label="Take-Home Pay"
+                            amount={taxes ? fmt(taxes.takeHome) : '—'}
+                            subtitle={taxes
                                     ? `${pct(taxes.takeHome / taxes.grossIncome)} of gross · effective rate ${pct(taxes.effectiveRate)}`
                                     : 'What you actually keep'}
-                            </Typography>
-                        </Paper>
+                            icon={<SavingsIcon fontSize="small" />}
+                            accentColor="#00C896"
+                            dim={!taxes}
+                            linearGradient='linear-gradient(135deg, rgba(0,200,150,0.08) 0%, rgba(0,153,112,0.04) 100%)'
+                            borderColor='rgba(0,200,150,0.25)'
+                            labelColor='secondary.main'
+                        />
                     </Grid>
 
                     {/* Retirement — full-width horizontal card */}
