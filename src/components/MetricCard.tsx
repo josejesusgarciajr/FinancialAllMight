@@ -1,4 +1,4 @@
-import { Box, Paper, Typography, type SxProps, type Theme } from '@mui/material'
+import { Box, Paper, Typography } from '@mui/material'
 
 export type MetricCardProps = {
     label: string
