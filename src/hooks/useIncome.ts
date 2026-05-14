@@ -24,7 +24,13 @@ export function useIncome() {
     function addIncome(amount: number | null) {
         if (!payRate) return
 
-        const calculatedIncome = calculateIncomePerPayRate(amount ?? 0, payRate as PayRate)
+        if (!amount || amount <= 0) {
+            setIncome(null)
+            saveIncome(null)
+            return
+        }
+
+        const calculatedIncome = calculateIncomePerPayRate(amount, payRate as PayRate)
         setIncome(calculatedIncome)
         saveIncome(calculatedIncome)
     }
