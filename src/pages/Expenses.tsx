@@ -3,7 +3,6 @@ import {
     Box,
     Container,
     Grid,
-    Paper,
     ToggleButton,
     ToggleButtonGroup,
     Typography,
