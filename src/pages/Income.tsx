@@ -27,6 +27,7 @@ import { US_STATES, calculateTaxes, stateHasTax } from '../utils/taxes'
 import { calculate401KContribution } from '../utils/retirement'
 import type { PayRate } from '../types/income'
 import { PAY_RATES } from '../types/income'
+import { PageHeader } from '../components/PageHeader'
 
 const fmt = (n: number) =>
     n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
@@ -83,44 +84,18 @@ export const Income = () => {
         <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
 
             {/* ── Page Header ──────────────────────────────────────────────── */}
-            <Box
-                sx={{
-                    background: 'linear-gradient(135deg, #070B14 0%, #0A1628 50%, #0F1923 100%)',
-                    borderBottom: '1px solid rgba(79, 142, 247, 0.15)',
-                    py: { xs: 5, md: 7 },
+            <PageHeader
+                icon={<AttachMoneyIcon sx={{ fontSize: '1.75rem', color: 'secondary.main' }} />}
+                iconSx={{
+                    p: 1.25, borderRadius: 2,
+                    bgcolor: 'rgba(0, 200, 150, 0.1)',
+                    border: '1px solid rgba(0, 200, 150, 0.25)',
+                    display: 'inline-flex',
                 }}
-            >
-                <Container maxWidth="lg">
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1.5 }}>
-                        <Box
-                            sx={{
-                                p: 1.25, borderRadius: 2,
-                                bgcolor: 'rgba(0, 200, 150, 0.1)',
-                                border: '1px solid rgba(0, 200, 150, 0.25)',
-                                display: 'inline-flex',
-                            }}
-                        >
-                            <AttachMoneyIcon sx={{ fontSize: '1.75rem', color: 'secondary.main' }} />
-                        </Box>
-                        <Typography
-                            variant="h4"
-                            sx={{
-                                fontWeight: 800,
-                                background: 'linear-gradient(135deg, #F0F2F5 50%, #4F8EF7 100%)',
-                                backgroundClip: 'text',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                letterSpacing: '-0.01em',
-                            }}
-                        >
-                            Income
-                        </Typography>
-                    </Box>
-                    <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 520, lineHeight: 1.7 }}>
-                        Track every dollar coming in and see exactly what you keep after federal, FICA, and state taxes.
-                    </Typography>
-                </Container>
-            </Box>
+                title="Income"
+                titleLinearGradient='linear-gradient(135deg, #F0F2F5 50%, #4F8EF7 100%)'
+                description="Track every dollar coming in and see exactly what you keep after federal, FICA, and state taxes."
+            />
 
             <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
                 <Grid container spacing={3}>

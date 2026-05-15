@@ -18,6 +18,7 @@ import BusinessCenterIcon from '@mui/icons-material/BusinessCenter'
 
 import { useFinance } from '../context/FinanceContext'
 import { calculate401KContribution, calculateEmployerMatch } from '../utils/retirement'
+import { PageHeader } from '../components/PageHeader'
 
 const fmt = (n: number) =>
     n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
@@ -55,45 +56,23 @@ export const Retirement = () => {
         <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
 
             {/* ── Page Header ──────────────────────────────────────────────── */}
-            <Box
-                sx={{
-                    background: 'linear-gradient(135deg, #070B14 0%, #0A1628 50%, #0F1923 100%)',
-                    borderBottom: '1px solid rgba(79, 142, 247, 0.15)',
-                    py: { xs: 5, md: 7 },
+            <PageHeader
+                icon={<SavingsIcon sx={{ fontSize: '1.75rem', color: 'primary.main' }} />}
+                iconSx={{
+                    p: 1.25, borderRadius: 2,
+                    bgcolor: 'rgba(79, 142, 247, 0.1)',
+                    border: '1px solid rgba(79, 142, 247, 0.25)',
+                    display: 'inline-flex',
                 }}
-            >
-                <Container maxWidth="lg">
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1.5 }}>
-                        <Box
-                            sx={{
-                                p: 1.25, borderRadius: 2,
-                                bgcolor: 'rgba(79, 142, 247, 0.1)',
-                                border: '1px solid rgba(79, 142, 247, 0.25)',
-                                display: 'inline-flex',
-                            }}
-                        >
-                            <SavingsIcon sx={{ fontSize: '1.75rem', color: 'primary.main' }} />
-                        </Box>
-                        <Typography
-                            variant="h4"
-                            sx={{
-                                fontWeight: 800,
-                                background: 'linear-gradient(135deg, #F0F2F5 50%, #4F8EF7 100%)',
-                                backgroundClip: 'text',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                letterSpacing: '-0.01em',
-                            }}
-                        >
-                            Retirement Planning
-                        </Typography>
-                    </Box>
-                    <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 560, lineHeight: 1.7 }}>
+                title="Retirement Planning"
+                titleLinearGradient="linear-gradient(135deg, #F0F2F5 50%, #4F8EF7 100%)"
+                description={
+                    <>
                         Maximize your tax-advantaged retirement savings. The 2025 combined 401(k) limit is{' '}
                         <strong style={{ color: '#4F8EF7' }}>{fmt(IRS_LIMIT_2025)}</strong> across Traditional and Roth contributions.
-                    </Typography>
-                </Container>
-            </Box>
+                    </>
+                }
+            />
 
             <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
 
