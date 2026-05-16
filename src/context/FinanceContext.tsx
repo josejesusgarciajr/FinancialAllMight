@@ -5,6 +5,8 @@ import { useExpenses } from '../hooks/useExpenses';
 import type { Expense } from '../types/expense';
 import { useRetirement } from '../hooks/useRetirement';
 import type { PayRate } from '../types/income'
+import { useDebt } from '../hooks/useDebt';
+import type { Debt } from '../types/debt';
 
 interface FinanceContextType {
     // income
@@ -30,6 +32,13 @@ interface FinanceContextType {
     updateExpense: (expense: Expense) => void;
     activeExpense: Expense | null;
     setActiveExpense: (expense: Expense | null) => void;
+    // debt
+    debts: Debt[];
+    addDebt: (newDebt: Debt) => void;
+    removeDebt: (debtId: string) => void;
+    updateDebt: (updatedDebt: Debt) => void;
+    activeDebt: Debt | null;
+    setActiveDebt: (debt: Debt | null) => void;
 }
 
 const FinanceContext = createContext<FinanceContextType | null>(null)
@@ -37,15 +46,22 @@ const FinanceContext = createContext<FinanceContextType | null>(null)
 export function FinanceProvider({ children }: { children: ReactNode }) {
     const { payRate, handlePayRateChange, incomeRate, handleIncomeRateChange, income } = useIncome()
     const { filingState, updateFilingState } = useTaxes()
+
     const {        
         _401K, handle401KChange, 
         roth401K, handleRoth401KChange, 
         employerMatch, handleEmployerMatchChange  
     } = useRetirement()
+
     const {
         expenses, addExpense, removeExpense,
         updateExpense, activeExpense, setActiveExpense
     } = useExpenses()
+    
+    const {
+        debts, addDebt, removeDebt, updateDebt,
+        activeDebt, setActiveDebt,
+    } = useDebt()
 
     return (
         <FinanceContext.Provider value={{
@@ -57,6 +73,8 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
                 _401K, handle401KChange, roth401K, handleRoth401KChange, employerMatch, handleEmployerMatchChange,
                 // expenses
                 expenses, addExpense, removeExpense, updateExpense, activeExpense, setActiveExpense,
+                // debt
+                debts, addDebt, removeDebt, updateDebt, activeDebt, setActiveDebt,
              }}>
             {children}
         </FinanceContext.Provider>
