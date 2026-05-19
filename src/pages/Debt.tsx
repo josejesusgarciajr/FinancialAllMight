@@ -64,7 +64,9 @@ export const DebtPage = () => {
                     <Grid size={{ xs: 12, sm: 6 }}>
                         <Paper elevation={0} sx={{ p: 3, textAlign: 'center' }}>
                             <Typography variant="h4" sx={{ fontWeight: 800, color: '#FF4D6D', mb: 0.5 }}>
-                                ${totalDebt.toLocaleString('en-US', { maximumFractionDigits: 2 })}
+                            {filteredDebts.length > 0
+                                ? `$${totalDebt.toLocaleString('en-US', { maximumFractionDigits: 2 })}`
+                                : '-'}
                             </Typography>
                             <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
                                 Total Debt
@@ -74,7 +76,7 @@ export const DebtPage = () => {
                     <Grid size={{ xs: 12, sm: 6 }}>
                         <Paper elevation={0} sx={{ p: 3, textAlign: 'center' }}>
                             <Typography variant="h4" sx={{ fontWeight: 800, color: '#4F8EF7', mb: 0.5 }}>
-                                {avgRate.toFixed(2)}%
+                                {filteredDebts.length > 0 ? `${avgRate.toFixed(2)}%` : '-'}
                             </Typography>
                             <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
                                 Avg. Interest Rate
