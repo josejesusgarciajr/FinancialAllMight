@@ -64,7 +64,7 @@ export const Home = () => {
 
     const stats: { value: string; label: string; accentColor?: string }[] = [
         { value: (income != null && income > 0) ? `$${income.toLocaleString('en-US')}` : '—', label: 'Gross Income' },
-        { value: `$${totalDebt.toLocaleString('en-US')}`, label: 'Total Debt' },
+        { value: (totalDebt != null && totalDebt > 0) ? `$${totalDebt.toLocaleString('en-US')}` : '-', label: 'Total Debt' },
         { value: '-', label: 'Avg. Annual Return' },
         { value: directionValue, label: 'Direction', accentColor: netMonthlyCashFlow != null ? (directionPositive ? '#00C896' : '#FF4D6D') : undefined },
     ]
