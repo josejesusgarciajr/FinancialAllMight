@@ -36,11 +36,13 @@ export const Home = () => {
         filingState,
         expenses,
         _401K, roth401K,
+        debts
     } = useFinance()
     const navigate = useNavigate()
 
     const traditionalAmount = income && _401K > 0 ? calculate401KContribution(income, _401K) : 0
     const rothAmount = income && roth401K > 0 ? calculate401KContribution(income, roth401K) : 0
+    const totalDebt = debts.reduce((sum, d) => sum + d.amount, 0)
 
     const taxes = useMemo(
         () => income && income > 0 && filingState
@@ -62,7 +64,7 @@ export const Home = () => {
 
     const stats: { value: string; label: string; accentColor?: string }[] = [
         { value: (income != null && income > 0) ? `$${income.toLocaleString('en-US')}` : '—', label: 'Gross Income' },
-        { value: '-', label: 'Total Debt' },
+        { value: `$${totalDebt.toLocaleString('en-US')}`, label: 'Total Debt' },
         { value: '-', label: 'Avg. Annual Return' },
         { value: directionValue, label: 'Direction', accentColor: netMonthlyCashFlow != null ? (directionPositive ? '#00C896' : '#FF4D6D') : undefined },
     ]
