@@ -1,4 +1,4 @@
-export const DebtCategoryOptions: string[] = [
+export const DebtCategoryOptions: DebtCategory[] = [
     'Credit Card',
     'Student Loan',
     'Mortgage',

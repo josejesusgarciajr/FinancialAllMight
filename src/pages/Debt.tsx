@@ -7,12 +7,18 @@ import { useFinance } from '../context/FinanceContext'
 import { AddDebtForm } from '../components/Debt/AddDebtForm'
 import { DebtDisplayList } from '../components/Debt/DebtDisplayList'
 import { PageHeader } from '../components/PageHeader'
-import type { DebtCategory } from '../types/debt'
+import { DebtCategoryOptions, type DebtCategory } from '../types/debt'
+import { DropDownSelect } from '../components/DropDownSelect'
+
+// react
+import { useState, useMemo } from 'react'
 
 const FORM_HEIGHT = 420
+const debtCategories: (DebtCategory | 'All')[] = ['All', ...DebtCategoryOptions]
 
 export const DebtPage = () => {
     const { debts, addDebt, removeDebt, updateDebt, activeDebt, setActiveDebt } = useFinance()
+    const [selectedCategory, setSelectedCategory] = useState<DebtCategory | 'All'>('All')
 
     function handleAddUpdateDebt(name: string, amount: number, interestRate: number, category: DebtCategory) {
         if (activeDebt) {
@@ -24,9 +30,15 @@ export const DebtPage = () => {
         addDebt({ id: crypto.randomUUID(), name, amount, interestRate, category })
     }
 
-    const totalDebt = debts.reduce((sum, d) => sum + d.amount, 0)
-    const avgRate = debts.length
-        ? debts.reduce((sum, d) => sum + d.interestRate, 0) / debts.length
+    const filteredDebts = useMemo(() => {
+        return (
+            debts.filter(d => selectedCategory === 'All' || d.category === selectedCategory)
+        )
+    }, [selectedCategory, debts])
+
+    const totalDebt = filteredDebts.reduce((sum, d) => sum + d.amount, 0)
+    const avgRate = filteredDebts.length
+        ? filteredDebts.reduce((sum, d) => sum + d.interestRate, 0) / filteredDebts.length
         : 0
 
     return (
@@ -71,6 +83,15 @@ export const DebtPage = () => {
                     </Grid>
                 </Grid>
 
+                {/* Category Selectors */}
+                <DropDownSelect
+                    label="Filter by Category"
+                    options={debtCategories}
+                    value={selectedCategory}
+                    onChange={(value) => setSelectedCategory(value as DebtCategory | 'All')}
+                    placeholder='Select a Category'
+                />
+
                 {/* Form + List */}
                 <Grid container spacing={3} sx={{ alignItems: 'flex-start' }}>
 
@@ -84,7 +105,7 @@ export const DebtPage = () => {
 
                     <Grid size={{ xs: 12, md: 7 }} sx={{ display: 'flex' }}>
                         <DebtDisplayList
-                            debts={debts}
+                            debts={filteredDebts}
                             setActiveDebt={setActiveDebt}
                             removeDebt={removeDebt}
                             maxHeight={FORM_HEIGHT}
