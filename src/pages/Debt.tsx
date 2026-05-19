@@ -86,13 +86,15 @@ export const DebtPage = () => {
                 </Grid>
 
                 {/* Category Selectors */}
-                <DropDownSelect
-                    label="Filter by Category"
-                    options={debtCategories}
-                    value={selectedCategory}
-                    onChange={(value) => setSelectedCategory(value as DebtCategory | 'All')}
-                    placeholder='Select a Category'
-                />
+                <Box sx={{ mb: 3 }}>
+                    <DropDownSelect
+                        label="Filter by Category"
+                        options={debtCategories}
+                        value={selectedCategory}
+                        onChange={(value) => setSelectedCategory(value as DebtCategory | 'All')}
+                        placeholder='Select a Category'
+                    />
+                </Box>
 
                 {/* Form + List */}
                 <Grid container spacing={3} sx={{ alignItems: 'flex-start' }}>
