@@ -3,13 +3,12 @@ import {
     Box,
     Container,
     Grid,
-    ToggleButton,
-    ToggleButtonGroup,
 } from '@mui/material'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 
 // finances
 import { useFinance } from '../context/FinanceContext'
+import { DropDownSelect } from '../components/DropDownSelect'
 import { AddExpenseForm } from '../components/Expenses/AddExpenseForm'
 import { ExpenseList } from '../components/Expenses/ExpenseList'
 import { ExpenseOptions, type ExpenseCategory, type Frequency } from '../types/expense'
@@ -86,57 +85,14 @@ export const Expenses = () => {
             </Grid>
 
             {/* Categories Options */}
-            <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
-                <ToggleButtonGroup
+            <Box sx={{ mb: 3 }}>
+                <DropDownSelect
+                    options={categories}
                     value={category}
-                    exclusive
-                    onChange={(_, val) => { if (val !== null) setCategory(val as ExpenseCategory | 'All') }}
-                    size="small"
-                    aria-label="expense category filter"
-                    sx={{
-                        flexWrap: 'wrap',
-                        gap: 0.5,
-                        bgcolor: '#0F1923',
-                        border: '1px solid rgba(255,77,109,0.15)',
-                        borderRadius: 2,
-                        p: 0.5,
-                        '& .MuiToggleButtonGroup-grouped': {
-                            border: 'none !important',
-                            borderRadius: '6px !important',
-                        },
-                    }}
-                >
-                    {categories.map((cat) => (
-                        <ToggleButton
-                            key={cat}
-                            value={cat}
-                            sx={{
-                                px: 2,
-                                py: 0.6,
-                                fontSize: '0.72rem',
-                                fontWeight: 600,
-                                textTransform: 'capitalize',
-                                color: 'text.secondary',
-                                letterSpacing: '0.04em',
-                                transition: 'all 0.15s ease',
-                                '&.Mui-selected': {
-                                    color: '#FF4D6D',
-                                    bgcolor: 'rgba(255,77,109,0.12)',
-                                    boxShadow: '0 0 0 1px rgba(255,77,109,0.35)',
-                                },
-                                '&.Mui-selected:hover': {
-                                    bgcolor: 'rgba(255,77,109,0.18)',
-                                },
-                                '&:hover': {
-                                    bgcolor: 'rgba(255,77,109,0.06)',
-                                    color: '#FF4D6D',
-                                },
-                            }}
-                        >
-                            {cat}
-                        </ToggleButton>
-                    ))}
-                </ToggleButtonGroup>
+                    onChange={(val) => setCategory(val as ExpenseCategory | 'All')}
+                    label="Filter by Category"
+                    placeholder='Select a Category'
+                />
             </Box>
 
             {/* Form + List */}
