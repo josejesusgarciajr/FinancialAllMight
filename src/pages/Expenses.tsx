@@ -72,47 +72,47 @@ export const Expenses = () => {
 
             <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
 
-            {/* Summary Strip */}
-            <Grid container spacing={2} sx={{ mb: 4 }}>
-                <ExpenseMetricCard 
-                    title="Monthly Total" 
-                    total={totalMonthly}
-                />
-                <ExpenseMetricCard 
-                    title="Yearly Total" 
-                    total={totalYearly}
-                />
-            </Grid>
-
-            {/* Categories Options */}
-            <Box sx={{ mb: 3 }}>
-                <DropDownSelect
-                    options={categories}
-                    value={category}
-                    onChange={(val) => setCategory(val as ExpenseCategory | 'All')}
-                    label="Filter by Category"
-                    placeholder='Select a Category'
-                />
-            </Box>
-
-            {/* Form + List */}
-            <Grid container spacing={3} sx={{ alignItems: 'flex-start' }}>
-
-                {/* Add Expense Form */}
-                <Grid size={{ xs: 12, md: 5 }} sx={{ display: 'flex' }}>
-                    <AddExpenseForm addUpdateExpense={handleAddUpdateExpense} updatingExpense={activeExpense} height={FORM_HEIGHT} />
-                </Grid>
-
-                {/* Expense List */}
-                <Grid size={{ xs: 12, md: 7 }} sx={{ display: 'flex' }}>
-                    <ExpenseList
-                        expenses={expensesByCategory}
-                        setActiveExpense={setActiveExpense}
-                        removeExpense={removeExpense}
-                        maxHeight={FORM_HEIGHT}
+                {/* Summary Strip */}
+                <Grid container spacing={2} sx={{ mb: 4 }}>
+                    <ExpenseMetricCard 
+                        title="Monthly Total" 
+                        total={totalMonthly}
+                    />
+                    <ExpenseMetricCard 
+                        title="Yearly Total" 
+                        total={totalYearly}
                     />
                 </Grid>
-            </Grid>
+
+                {/* Categories Options */}
+                <Box sx={{ mb: 3 }}>
+                    <DropDownSelect
+                        options={categories}
+                        value={category}
+                        onChange={(val) => setCategory(val as ExpenseCategory | 'All')}
+                        label="Filter by Category"
+                        placeholder='Select a Category'
+                    />
+                </Box>
+
+                {/* Form + List */}
+                <Grid container spacing={3} sx={{ alignItems: 'flex-start' }}>
+
+                    {/* Add Expense Form */}
+                    <Grid size={{ xs: 12, md: 5 }} sx={{ display: 'flex' }}>
+                        <AddExpenseForm addUpdateExpense={handleAddUpdateExpense} updatingExpense={activeExpense} height={FORM_HEIGHT} />
+                    </Grid>
+
+                    {/* Expense List */}
+                    <Grid size={{ xs: 12, md: 7 }} sx={{ display: 'flex' }}>
+                        <ExpenseList
+                            expenses={expensesByCategory}
+                            setActiveExpense={setActiveExpense}
+                            removeExpense={removeExpense}
+                            maxHeight={FORM_HEIGHT}
+                        />
+                    </Grid>
+                </Grid>
             </Container>
         </Box>
     )
