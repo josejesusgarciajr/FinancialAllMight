@@ -54,6 +54,7 @@ export const Home = () => {
 
     const netMonthlyCashFlow = taxes ? taxes.takeHome / 12 - monthlyExpenses : null
     const directionPositive = netMonthlyCashFlow != null && netMonthlyCashFlow >= 0
+    const avgAnnualReturn = netMonthlyCashFlow != null ? (netMonthlyCashFlow * 12).toLocaleString('en-US', { maximumFractionDigits: 0 }) : null
     const directionValue = netMonthlyCashFlow != null
         ? `${directionPositive ? '+' : ''}${netMonthlyCashFlow.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}/mo`
         : '—'
@@ -61,7 +62,7 @@ export const Home = () => {
     const stats: { value: string; label: string; accentColor?: string }[] = [
         { value: (income != null && income > 0) ? `$${income.toLocaleString('en-US')}` : '—', label: 'Gross Income' },
         { value: (totalDebt != null && totalDebt > 0) ? `$${totalDebt.toLocaleString('en-US')}` : '-', label: 'Total Debt' },
-        { value: '-', label: 'Avg. Annual Return' },
+        { value: avgAnnualReturn ? `$${avgAnnualReturn}` : '-', label: 'Avg. Annual Return' },
         { value: directionValue, label: 'Direction', accentColor: netMonthlyCashFlow != null ? (directionPositive ? '#00C896' : '#FF4D6D') : undefined },
     ]
 
