@@ -28,7 +28,7 @@ import React from 'react'
 type ExpenseListProps = {
     expenses: Expense[];
     setActiveExpense: (expense: Expense) => void;
-    removeExpense: (expenseId: string) => void;
+    setOpenConfirmDialog: (open: boolean) => void;
     maxHeight: number;
 }
 
@@ -42,7 +42,13 @@ const categoryConfig: Record<ExpenseCategory, { icon: React.ReactNode; color: st
     other:          { icon: <MoreHorizIcon />,      color: '#94A3B8', bg: 'rgba(148,163,184,0.08)',  border: 'rgba(148,163,184,0.2)' },
 }
 
-export const ExpenseList = ({ expenses, setActiveExpense, removeExpense, maxHeight }: ExpenseListProps) => {
+export const ExpenseList = ({ expenses, setActiveExpense, setOpenConfirmDialog, maxHeight }: ExpenseListProps) => {
+
+    function handleOpenDeleteDialog(expense: Expense) {
+        setActiveExpense(expense)
+        setOpenConfirmDialog(true)
+    }
+
     return (
         <Paper elevation={0} sx={{
             p: 3,
@@ -118,7 +124,7 @@ export const ExpenseList = ({ expenses, setActiveExpense, removeExpense, maxHeig
                                     </IconButton>
                                     <IconButton
                                         size="small"
-                                        onClick={() => removeExpense(expense.id)}
+                                        onClick={() => handleOpenDeleteDialog(expense)}
                                         sx={{
                                             color: 'rgba(255,77,109,0.4)',
                                             '&:hover': { color: '#FF4D6D', bgcolor: 'rgba(255,77,109,0.08)' },

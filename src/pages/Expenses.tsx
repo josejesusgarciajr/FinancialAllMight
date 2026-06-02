@@ -13,6 +13,7 @@ import { AddExpenseForm } from '../components/Expenses/AddExpenseForm'
 import { ExpenseList } from '../components/Expenses/ExpenseList'
 import { ExpenseOptions, type ExpenseCategory, type Frequency } from '../types/expense'
 import { toMonthly } from '../utils/expenses'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 
 // react
 import { useState, useMemo } from 'react'
@@ -25,6 +26,7 @@ const categories: ('All' | ExpenseCategory)[] = ['All', ...ExpenseOptions]
 export const Expenses = () => {
     const { expenses, addExpense, removeExpense, updateExpense, activeExpense, setActiveExpense } = useFinance()
     const [category, setCategory] = useState<ExpenseCategory | 'All'>('All');
+    const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false)
 
     function handleAddUpdateExpense(name: string, amount: number, frequency: Frequency, category: ExpenseCategory) {
         if (activeExpense) {
@@ -34,6 +36,22 @@ export const Expenses = () => {
         }
 
         addExpense({ id: crypto.randomUUID(), name, amount, frequency, category })
+    }
+
+    function handleConfirmModalClose(deleteExpense = false) {
+        if (!deleteExpense)
+        {
+            setOpenConfirmDialog(false)
+            setActiveExpense(null)
+            return;
+        }
+
+        if (activeExpense) {
+            removeExpense(activeExpense.id)
+        }
+
+        setActiveExpense(null)
+        setOpenConfirmDialog(false)
     }
 
     const expensesByCategory = useMemo(() => {
@@ -70,6 +88,12 @@ export const Expenses = () => {
                 }
             />
 
+            {/* Delete Confirmation Modal */}
+            <ConfirmDialog
+                open={openConfirmDialog}
+                handleClose={handleConfirmModalClose}
+            />
+
             <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
 
                 {/* Summary Strip */}
@@ -100,7 +124,12 @@ export const Expenses = () => {
 
                     {/* Add Expense Form */}
                     <Grid size={{ xs: 12, md: 5 }} sx={{ display: 'flex' }}>
-                        <AddExpenseForm addUpdateExpense={handleAddUpdateExpense} updatingExpense={activeExpense} height={FORM_HEIGHT} />
+                        <AddExpenseForm 
+                            deleteModalOpen={openConfirmDialog}
+                            addUpdateExpense={handleAddUpdateExpense} 
+                            updatingExpense={activeExpense} 
+                            height={FORM_HEIGHT}
+                        />
                     </Grid>
 
                     {/* Expense List */}
@@ -108,7 +137,7 @@ export const Expenses = () => {
                         <ExpenseList
                             expenses={expensesByCategory}
                             setActiveExpense={setActiveExpense}
-                            removeExpense={removeExpense}
+                            setOpenConfirmDialog={setOpenConfirmDialog}
                             maxHeight={FORM_HEIGHT}
                         />
                     </Grid>
