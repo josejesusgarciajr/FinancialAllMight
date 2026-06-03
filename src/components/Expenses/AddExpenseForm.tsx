@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react'
 // material ui
 import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 // finance
 import { ExpenseFrequencyOptions, ExpenseOptions, type Expense, type ExpenseCategory, type Frequency } from '../../types/expense'
@@ -96,7 +98,11 @@ export const AddExpenseForm = ({ deleteModalOpen, addUpdateExpense, updatingExpe
                         type="submit"
                         variant="contained"
                         fullWidth
-                        startIcon={<AddIcon />}
+                        startIcon={
+                            deleteModalOpen ? <DeleteIcon /> :
+                            updatingExpense ? <EditIcon /> :
+                            <AddIcon />
+                        }
                         sx={{
                             py: 1.25,
                             fontWeight: 700,
