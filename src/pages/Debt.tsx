@@ -9,6 +9,7 @@ import { DebtDisplayList } from '../components/Debt/DebtDisplayList'
 import { PageHeader } from '../components/PageHeader'
 import { DebtCategoryOptions, type DebtCategory } from '../types/debt'
 import { DropDownSelect } from '../components/DropDownSelect'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 
 // react
 import { useState, useMemo } from 'react'
@@ -19,6 +20,7 @@ const debtCategories: (DebtCategory | 'All')[] = ['All', ...DebtCategoryOptions]
 export const DebtPage = () => {
     const { debts, addDebt, removeDebt, updateDebt, activeDebt, setActiveDebt } = useFinance()
     const [selectedCategory, setSelectedCategory] = useState<DebtCategory | 'All'>('All')
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false)
 
     function handleAddUpdateDebt(name: string, amount: number, interestRate: number, category: DebtCategory) {
         if (activeDebt) {
@@ -28,6 +30,18 @@ export const DebtPage = () => {
         }
 
         addDebt({ id: crypto.randomUUID(), name, amount, interestRate, category })
+    }
+
+    function handleDeleteDialogClose(deleteItem: boolean) {
+        if (deleteItem && activeDebt) {
+            removeDebt(activeDebt.id)
+            setActiveDebt(null)
+            setDeleteDialogOpen(false)
+            return;
+        }
+
+        setDeleteDialogOpen(false)
+        setActiveDebt(null)
     }
 
     const filteredDebts = useMemo(() => {
@@ -55,6 +69,12 @@ export const DebtPage = () => {
                 title="Debt Management"
                 titleLinearGradient="linear-gradient(135deg, #F0F2F5 50%, #FF4D6D 100%)"
                 description="Track and manage your debts effectively. Add new debts, view existing ones, and stay on top of your financial obligations."
+            />
+
+            {/* Delete Cofirmation Dialog */}
+            <ConfirmDialog
+                open={deleteDialogOpen}
+                handleClose={handleDeleteDialogClose}
             />
 
             <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
@@ -101,6 +121,7 @@ export const DebtPage = () => {
 
                     <Grid size={{ xs: 12, md: 5 }} sx={{ display: 'flex' }}>
                         <AddDebtForm
+                            deleteDialogOpen={deleteDialogOpen}
                             addUpdateDebt={handleAddUpdateDebt}
                             updatingDebt={activeDebt}
                             height={FORM_HEIGHT}
@@ -111,7 +132,7 @@ export const DebtPage = () => {
                         <DebtDisplayList
                             debts={filteredDebts}
                             setActiveDebt={setActiveDebt}
-                            removeDebt={removeDebt}
+                            setDeleteDialogOpen={setDeleteDialogOpen}
                             maxHeight={FORM_HEIGHT}
                         />
                     </Grid>

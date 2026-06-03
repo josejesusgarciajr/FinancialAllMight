@@ -5,25 +5,35 @@ import { useState, useEffect } from 'react'
 import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 // finances
 import { DebtCategoryOptions, type Debt, type DebtCategory } from '../../types/debt'
 import { DropDownSelect } from '../DropDownSelect'
 
 type AddDebtFormProps = {
+    deleteDialogOpen: boolean;
     addUpdateDebt: (name: string, amount: number, interestRate: number, category: DebtCategory) => void;
     updatingDebt: Debt | null;
     height: number;
 }
 
-export const AddDebtForm = ({ addUpdateDebt, updatingDebt, height }: AddDebtFormProps) => {
+export const AddDebtForm = ({ deleteDialogOpen, addUpdateDebt, updatingDebt, height }: AddDebtFormProps) => {
     const [name, setName] = useState('')
     const [amount, setAmount] = useState('')
     const [interestRate, setInterestRate] = useState('')
     const [category, setCategory] = useState<DebtCategory | ''>('')
 
     useEffect(() => {
-        if (!updatingDebt) return
+        if (!updatingDebt) 
+        {
+            setName('')
+            setAmount('')
+            setInterestRate('')
+            setCategory('')
+            return
+        }
+
         setName(updatingDebt.name)
         setAmount(String(updatingDebt.amount))
         setInterestRate(String(updatingDebt.interestRate))
@@ -50,7 +60,10 @@ export const AddDebtForm = ({ addUpdateDebt, updatingDebt, height }: AddDebtForm
     return (
         <Paper elevation={0} sx={{ p: 3, width: '100%', height }}>
             <Typography variant="h6" sx={{ fontWeight: 700, mb: 3, color: 'text.primary' }}>
-                {isEditing ? 'Update Debt' : 'Add Debt'}
+                {
+                    deleteDialogOpen ? 'Delete Debt' :
+                    isEditing ? 'Update Debt' : 
+                    'Add Debt'}
             </Typography>
 
             <Box component="form" onSubmit={handleSubmit}>
@@ -93,7 +106,11 @@ export const AddDebtForm = ({ addUpdateDebt, updatingDebt, height }: AddDebtForm
                         type="submit"
                         variant="contained"
                         fullWidth
-                        startIcon={isEditing ? <EditIcon /> : <AddIcon />}
+                        startIcon={
+                            deleteDialogOpen ? <DeleteIcon /> :
+                            isEditing ? <EditIcon /> :
+                            <AddIcon />
+                        }
                         sx={{
                             py: 1.25,
                             fontWeight: 700,
@@ -101,7 +118,11 @@ export const AddDebtForm = ({ addUpdateDebt, updatingDebt, height }: AddDebtForm
                             '&:hover': { bgcolor: '#3A7AE3' },
                         }}
                     >
-                        {isEditing ? 'Update Debt' : 'Add Debt'}
+                        {
+                            deleteDialogOpen ? 'Delete Debt' :
+                            isEditing ? 'Update Debt' 
+                            : 'Add Debt'
+                        }
                     </Button>
                 </Stack>
             </Box>

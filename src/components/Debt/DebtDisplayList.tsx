@@ -26,7 +26,7 @@ import type { Debt, DebtCategory } from '../../types/debt'
 type DebtDisplayListProps = {
     debts: Debt[];
     setActiveDebt: (debt: Debt | null) => void;
-    removeDebt: (debtId: string) => void;
+    setDeleteDialogOpen: (open: boolean) => void;
     maxHeight: number;
 }
 
@@ -39,7 +39,13 @@ const categoryConfig: Record<DebtCategory, { icon: React.ReactNode; color: strin
     'Other':         { icon: <MoreHorizIcon />,        color: '#94A3B8', bg: 'rgba(148,163,184,0.08)',  border: 'rgba(148,163,184,0.2)' },
 }
 
-export const DebtDisplayList = ({ debts, setActiveDebt, removeDebt, maxHeight }: DebtDisplayListProps) => {
+export const DebtDisplayList = ({ debts, setActiveDebt, setDeleteDialogOpen, maxHeight }: DebtDisplayListProps) => {
+
+    function handleDeleteClick(debt: Debt) {
+        setActiveDebt(debt)
+        setDeleteDialogOpen(true)
+    }
+
     return (
         <Paper elevation={0} sx={{
             p: 3,
@@ -114,7 +120,7 @@ export const DebtDisplayList = ({ debts, setActiveDebt, removeDebt, maxHeight }:
                                     </IconButton>
                                     <IconButton
                                         size="small"
-                                        onClick={() => removeDebt(debt.id)}
+                                        onClick={() => handleDeleteClick(debt)}
                                         sx={{
                                             color: 'rgba(255,77,109,0.4)',
                                             '&:hover': { color: '#FF4D6D', bgcolor: 'rgba(255,77,109,0.08)' },
