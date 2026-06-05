@@ -21,7 +21,7 @@ export const PageHeader = ({icon, iconSx, title, titleLinearGradient, descriptio
             sx={{
                 background: 'linear-gradient(135deg, #070B14 0%, #0A1628 50%, #0F1923 100%)',
                 borderBottom: '1px solid rgba(79, 142, 247, 0.15)',
-                py: { xs: 5, md: 7 },
+                py: { xs: 2, md: 4 },
             }}
         >
             <Container maxWidth="lg">
