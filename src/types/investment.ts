@@ -1,11 +1,29 @@
 ﻿
+export type ReoccurringContribution = {
+    amount: number;
+    frequency: 'Daily' | 'Weekly' | 'Biweekly' | 'Monthly' | 'Quarterly' | 'Annually';
+}
+
+export type IContributionDetails = {
+    currentValue: number;
+    reoccurringContributions: ReoccurringContribution[];
+}
+
 export type Investment = {
     symbol: string;
     vender: string;
     price: number;
     averageYearlyReturn: number;
     riskLevel: 'Low' | 'Medium' | 'High';
+    contributionDetails?: IContributionDetails;
 }
+
+export const riskConfig = {
+    Low:    { color: '#00C896', bg: 'rgba(0, 200, 150, 0.1)',  border: 'rgba(0, 200, 150, 0.25)' },
+    Medium: { color: '#F5A623', bg: 'rgba(245, 166, 35, 0.1)', border: 'rgba(245, 166, 35, 0.25)' },
+    High:   { color: '#FF4D6D', bg: 'rgba(255, 77, 109, 0.1)', border: 'rgba(255, 77, 109, 0.25)' },
+}
+
 
 export const investmentData: Investment[] = [
     // Index Funds
