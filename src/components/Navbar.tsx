@@ -26,6 +26,7 @@ const navLinks = [
     { label: 'Retirement', path: '/retirement' },
     { label: 'Expenses', path: '/expenses' },
     { label: 'Debt', path: '/debt' },
+    { label: 'Investments', path: '/investments' },
 ]
 
 const ticker = [

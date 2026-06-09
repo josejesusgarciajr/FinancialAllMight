@@ -7,6 +7,7 @@ import { Retirement } from './pages/Retirement'
 import { Expenses } from './pages/Expenses'
 import { DebtPage } from './pages/Debt'
 import { ScrollToTop } from './components/ScrollToTop'
+import { Investments } from './pages/Investments'
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
                     <Route path='/retirement' element={<Retirement />} />
                     <Route path='/expenses' element={<Expenses />} />
                     <Route path='/debt' element={<DebtPage />} />
+                    <Route path='/investments' element={<Investments />} />
                 </Routes>
             </BrowserRouter>
         </FinanceProvider>
