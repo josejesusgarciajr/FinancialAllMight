@@ -1,7 +1,12 @@
-﻿
+﻿export type ContributionFequency = 'Daily' | 'Weekly' | 'Biweekly' | 'Monthly' | 'Quarterly' | 'Annually';
+
+export const ContributionFrequencyOptions: ContributionFequency[] = [
+    'Daily', 'Weekly', 'Biweekly', 'Monthly', 'Quarterly', 'Annually',
+]
+
 export type ReoccurringContribution = {
     amount: number;
-    frequency: 'Daily' | 'Weekly' | 'Biweekly' | 'Monthly' | 'Quarterly' | 'Annually';
+    frequency: ContributionFequency;
 }
 
 export type IContributionDetails = {

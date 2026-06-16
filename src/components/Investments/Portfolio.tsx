@@ -15,12 +15,16 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import type { Investment } from '../../types/investment'
 import { riskConfig } from '../../types/investment'
 
+// react
+import { useNavigate } from 'react-router-dom'
+
 type PortfolioProps = {
     investments: Investment[];
     handleOpenDeleteDialog: (investment: Investment) => void;
 }
 
 export const Portfolio = ({investments, handleOpenDeleteDialog}: PortfolioProps) => {
+    const navigate = useNavigate()
 
     if (investments.length === 0) {
         return (
@@ -72,6 +76,14 @@ export const Portfolio = ({investments, handleOpenDeleteDialog}: PortfolioProps)
                                     </Typography>
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                    <Typography
+                                     variant="caption" 
+                                     color="text.secondary" 
+                                     sx={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}
+                                     onClick={() => navigate(`/investments/${inv.symbol}`)}
+                                     >
+                                        DETAILS
+                                    </Typography>
                                     <Chip
                                         label={inv.riskLevel}
                                         size="small"
