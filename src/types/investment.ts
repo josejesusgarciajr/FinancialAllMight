@@ -5,6 +5,7 @@ export const ContributionFrequencyOptions: ContributionFequency[] = [
 ]
 
 export type ReoccurringContribution = {
+    id: number;
     amount: number;
     frequency: ContributionFequency;
 }

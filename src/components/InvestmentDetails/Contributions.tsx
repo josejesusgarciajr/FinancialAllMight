@@ -1,15 +1,18 @@
-import type { ReoccurringContribution } from '../../types/investment'
-import { Box, Chip, Typography } from '@mui/material'
+import type { Investment, ReoccurringContribution } from '../../types/investment'
+import { Box, Chip, Typography, IconButton } from '@mui/material'
 import RepeatIcon from '@mui/icons-material/Repeat'
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 
 type ContributionsProps = {
-    reoccuringContributions: ReoccurringContribution[];
+    investment: Investment;
+    openDeleteDialog: (contribution: ReoccurringContribution) => void;
 }
 
-export const Contributions = ({ reoccuringContributions }: ContributionsProps) => {
+export const Contributions = ({ investment, openDeleteDialog }: ContributionsProps) => {
+
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-            {reoccuringContributions.map((contribution, index) => (
+            {investment?.contributionDetails?.reoccurringContributions?.map((contribution, index) => (
                 <Box
                     key={index}
                     sx={{
@@ -37,6 +40,16 @@ export const Contributions = ({ reoccuringContributions }: ContributionsProps) =
                     <Typography sx={{ color: 'secondary.main', fontWeight: 700, fontSize: '1rem' }}>
                         ${contribution.amount.toLocaleString()}
                     </Typography>
+                    <IconButton
+                        size="small"
+                        onClick={() => openDeleteDialog(contribution)}
+                        sx={{
+                            color: 'rgba(255,77,109,0.4)',
+                            '&:hover': { color: '#FF4D6D', bgcolor: 'rgba(255,77,109,0.08)' },
+                        }}
+                    >
+                        <DeleteOutlinedIcon fontSize="small" />
+                    </IconButton>
                 </Box>
             ))}
         </Box>
