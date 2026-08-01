@@ -32,7 +32,7 @@ export const InvestmentsDetails = () => {
     const { getMyInvestmentBySymbol, updateInvestment } = useInvestments()
     const { symbol } = useParams<{ symbol: string }>()
     const investment = getMyInvestmentBySymbol(symbol ?? '')
-    const [IContribution, setIContribution] = useState<IContributionDetails | null>(investment?.contributionDetails ?? null)
+    const IContribution = investment?.contributionDetails ?? null
     const [contributionFrequency, setContributionFrequency] = useState<ContributionFequency | null>(null)
     const [contributionAmount, setContributionAmount] = useState<number | null>(null)
 
@@ -48,7 +48,6 @@ export const InvestmentsDetails = () => {
             reoccurringContributions: IContribution?.reoccurringContributions ?? [],
         }
 
-        setIContribution(updatedContribution)
         updateInvestment({ ...investment, contributionDetails: updatedContribution })
     }
 
@@ -80,7 +79,6 @@ export const InvestmentsDetails = () => {
             ],
         }
 
-        setIContribution(updatedContribution)
         updateInvestment({ ...investment, contributionDetails: updatedContribution })
         setContributionAmount(null)
         setContributionFrequency(null)
