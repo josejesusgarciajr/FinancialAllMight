@@ -3,6 +3,7 @@ import { Box, Chip, Typography, IconButton } from '@mui/material'
 import RepeatIcon from '@mui/icons-material/Repeat'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 
+
 type ContributionsProps = {
     investment: Investment;
     openDeleteDialog: (contribution: ReoccurringContribution) => void;
