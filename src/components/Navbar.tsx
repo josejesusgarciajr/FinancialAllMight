@@ -27,6 +27,7 @@ const navLinks = [
     { label: 'Expenses', path: '/expenses' },
     { label: 'Debt', path: '/debt' },
     { label: 'Investments', path: '/investments' },
+    { label: 'Portfolio Analysis', path: '/portfolio-analysis' },
 ]
 
 const ticker = [

@@ -9,6 +9,7 @@ import { DebtPage } from './pages/Debt'
 import { ScrollToTop } from './components/ScrollToTop'
 import { Investments } from './pages/Investments'
 import { InvestmentsDetails } from './pages/InvestmentsDetails'
+import { PortfolioAnalysis } from './pages/PortfolioAnalysis'
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                     <Route path='/debt' element={<DebtPage />} />
                     <Route path='/investments' element={<Investments />} />
                     <Route path='/investments/:symbol' element={<InvestmentsDetails />} />
+                    <Route path='/portfolio-analysis' element={<PortfolioAnalysis />} />
                 </Routes>
             </BrowserRouter>
         </FinanceProvider>
