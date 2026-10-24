@@ -14,6 +14,25 @@ export function getEmployerMatch() {
     return storedValue ? parseFloat(storedValue) : 0
 }
 
+export function get401KBalance() {
+    const storedValue = localStorage.getItem('401KBalance')
+    return storedValue ? parseFloat(storedValue) || 0 : 0
+}
+
+export function updateLocalStorage401KBalance(newValue: number) {
+    localStorage.setItem('401KBalance', newValue.toString())
+}
+
+export const DEFAULT_401K_SYMBOL = 'FXAIX'
+
+export function get401KSymbol() {
+    return localStorage.getItem('401KSymbol') || DEFAULT_401K_SYMBOL
+}
+
+export function updateLocalStorage401KSymbol(symbol: string) {
+    localStorage.setItem('401KSymbol', symbol)
+}
+
 export function calculate401KContribution(income: number, contributionPercentage: number) {
     return income * (contributionPercentage / 100)
 }

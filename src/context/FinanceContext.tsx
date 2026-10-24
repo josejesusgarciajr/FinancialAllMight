@@ -25,6 +25,10 @@ interface FinanceContextType {
     handleRoth401KChange: (newValue: number) => void;
     employerMatch: number;
     handleEmployerMatchChange: (newValue: number) => void;
+    balance401K: number;
+    handleBalance401KChange: (newValue: number) => void;
+    symbol401K: string;
+    handleSymbol401KChange: (symbol: string) => void;
     // expenses
     expenses: Expense[];
     addExpense: (newExpense: Expense) => void;
@@ -50,7 +54,9 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
     const {        
         _401K, handle401KChange, 
         roth401K, handleRoth401KChange, 
-        employerMatch, handleEmployerMatchChange  
+        employerMatch, handleEmployerMatchChange,
+        balance401K, handleBalance401KChange,
+        symbol401K, handleSymbol401KChange
     } = useRetirement()
 
     const {
@@ -71,6 +77,7 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
                 filingState, updateFilingState,
                 // retirement
                 _401K, handle401KChange, roth401K, handleRoth401KChange, employerMatch, handleEmployerMatchChange,
+                balance401K, handleBalance401KChange, symbol401K, handleSymbol401KChange,
                 // expenses
                 expenses, addExpense, removeExpense, updateExpense, activeExpense, setActiveExpense,
                 // debt

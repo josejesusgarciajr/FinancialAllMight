@@ -10,6 +10,7 @@ import {
     Chip,
     Alert,
     LinearProgress,
+    Autocomplete,
 } from '@mui/material'
 import SavingsIcon from '@mui/icons-material/Savings'
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
@@ -18,6 +19,7 @@ import BusinessCenterIcon from '@mui/icons-material/BusinessCenter'
 
 import { useFinance } from '../context/FinanceContext'
 import { calculate401KContribution, calculateEmployerMatch } from '../utils/retirement'
+import { investmentData } from '../types/investment'
 import { PageHeader } from '../components/PageHeader'
 
 const fmt = (n: number) =>
@@ -28,12 +30,16 @@ const IRS_LIMIT_2025 = 23_500
 export const Retirement = () => {
     const { 
         income,
-        _401K, handle401KChange, roth401K, handleRoth401KChange, employerMatch, handleEmployerMatchChange
+        _401K, handle401KChange, roth401K, handleRoth401KChange, employerMatch, handleEmployerMatchChange,
+        balance401K, handleBalance401KChange,
+        symbol401K, handleSymbol401KChange
      } = useFinance()
 
     const [traditionalDraft, setTraditionalDraft] = useState(_401K.toString())
     const [rothDraft, setRothDraft] = useState(roth401K.toString())
     const [employerMatchDraft, setEmployerMatchDraft] = useState(employerMatch.toString())
+
+    const [balanceDraft, setBalanceDraft] = useState(balance401K > 0 ? balance401K.toString() : '')
 
     const traditionalAmount = income && _401K > 0 ? calculate401KContribution(income, _401K) : 0
     const rothAmount = income && roth401K > 0 ? calculate401KContribution(income, roth401K) : 0
@@ -92,6 +98,71 @@ export const Retirement = () => {
                 )}
 
                 <Grid container spacing={3}>
+
+                    {/* ── Current 401(k) Balance ──────────────────────────────── */}
+                    <Grid size={{ xs: 12 }}>
+                        <Paper
+                            elevation={0}
+                            sx={{
+                                p: 2.5,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 1.5,
+                                borderColor: balance401K > 0 ? 'rgba(147,197,253,0.35)' : undefined,
+                                transition: 'border-color 0.2s',
+                            }}
+                        >
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                    <SavingsIcon sx={{ color: '#93C5FD', fontSize: '1.15rem' }} />
+                                    <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                                        Current 401(k) Balance
+                                    </Typography>
+                                </Box>
+                                <Typography
+                                    variant="h6"
+                                    sx={{ fontWeight: 800, color: balance401K > 0 ? '#93C5FD' : 'text.disabled' }}
+                                >
+                                    {balance401K > 0
+                                        ? balance401K.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 })
+                                        : '—'}
+                                </Typography>
+                            </Box>
+                            <Autocomplete
+                                size="small"
+                                disableClearable
+                                options={investmentData}
+                                value={investmentData.find(i => i.symbol === symbol401K) ?? investmentData[0]}
+                                onChange={(_, option) => handleSymbol401KChange(option.symbol)}
+                                getOptionLabel={(o) => `${o.symbol} — ${o.vender}`}
+                                isOptionEqualToValue={(a, b) => a.symbol === b.symbol}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Invested In (Traditional + Roth)" sx={inputFieldSx('#93C5FD')} />
+                                )}
+                            />
+                            <TextField
+                                type="number"
+                                size="small"
+                                label="Traditional + Roth"
+                                value={balanceDraft}
+                                onChange={(e) => {
+                                    setBalanceDraft(e.target.value)
+                                    handleBalance401KChange(parseFloat(e.target.value))
+                                }}
+                                slotProps={{
+                                    input: {
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <Typography sx={{ color: 'text.secondary', fontWeight: 600 }}>$</Typography>
+                                            </InputAdornment>
+                                        ),
+                                    },
+                                    htmlInput: { min: 0, step: 100 },
+                                }}
+                                sx={inputFieldSx('#93C5FD')}
+                            />
+                        </Paper>
+                    </Grid>
 
                     {/* ── Traditional 401(k) ──────────────────────────────────── */}
                     <Grid size={{ xs: 12, md: 6 }}>
