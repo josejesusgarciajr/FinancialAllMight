@@ -8,7 +8,7 @@ import { Contributions } from '../components/InvestmentDetails/Contributions'
 
 // react
 import { useParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 // mui
 import { Box, Button, Container, Grid, TextField, Typography } from '@mui/material'
@@ -39,6 +39,36 @@ export const InvestmentsDetails = () => {
     // delete contribution dialog
     const [showDeleteConfirmationDialog, setShowDeleteConfirmationDialog] = useState<boolean>(false);
     const [contributionToDelete, setContributionToDelete] = useState<ReoccurringContribution | null>(null);
+
+    // edit mode
+    const [editMode, setEditMode] = useState<boolean>(false);
+    const [editContribution, setEditContribution] = useState<ReoccurringContribution | null>(null);
+
+    function handleUpdateContribution() {
+        if (!investment || !editContribution || !contributionAmount || !contributionFrequency) return
+
+        const updatedContribution: IContributionDetails = {
+            currentValue: IContribution?.currentValue ?? 0,
+            reoccurringContributions: (IContribution?.reoccurringContributions ?? []).map(contribution =>
+                contribution.id === editContribution.id
+                    ? { ...contribution, amount: contributionAmount, frequency: contributionFrequency }
+                    : contribution
+            ),
+        }
+
+        updateInvestment({ ...investment, contributionDetails: updatedContribution })
+        setEditMode(false)
+        setEditContribution(null)
+        setContributionAmount(null)
+        setContributionFrequency(null)
+    }
+
+    function handleCancelEdit() {
+        setEditMode(false)
+        setEditContribution(null)
+        setContributionAmount(null)
+        setContributionFrequency(null)
+    }
 
     function handleCurrentValueChange(value: number) {
         if (!investment) return
@@ -109,6 +139,11 @@ export const InvestmentsDetails = () => {
 
         updateInvestment({ ...investment, contributionDetails: updatedContribution })
 
+        // deleting the contribution being edited would leave the form stuck in edit mode
+        if (editContribution?.id === contributionToDelete.id) {
+            handleCancelEdit()
+        }
+
         setContributionToDelete(null);
         setShowDeleteConfirmationDialog(false);
     }
@@ -137,6 +172,14 @@ export const InvestmentsDetails = () => {
             color: risk?.color ?? 'text.secondary',
         },
     ]
+
+    // edit mode effect
+    useEffect(() => {
+        if (editMode && editContribution) {
+            setContributionAmount(editContribution.amount);
+            setContributionFrequency(editContribution.frequency);
+        }
+    }, [editMode, editContribution])
 
     return (
         <>
@@ -202,7 +245,7 @@ export const InvestmentsDetails = () => {
                                 />
 
                                 <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                                    Add Recurring Contribution
+                                    {editMode ? 'Update Recurring Contribution' : 'Add Recurring Contribution'}
                                 </Typography>
 
                                 <DropDownSelect
@@ -222,21 +265,46 @@ export const InvestmentsDetails = () => {
                                     sx={inputSx}
                                 />
 
-                                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 'auto' }}>
-                                    <Button
-                                        variant="outlined"
-                                        onClick={handleAddContribution}
-                                        disabled={!contributionAmount || !contributionFrequency}
-                                        sx={{
-                                            borderColor: 'secondary.main',
-                                            color: 'secondary.main',
-                                            '&:hover': { bgcolor: 'rgba(0, 200, 150, 0.08)', borderColor: 'secondary.main' },
-                                            '&.Mui-disabled': { borderColor: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.3)' },
-                                        }}
-                                    >
-                                        + Add Contribution
-                                    </Button>
-                                </Box>
+                                {editMode ? (
+                                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 'auto' }}>
+                                        <Button
+                                            variant="text"
+                                            onClick={handleCancelEdit}
+                                            sx={{ color: 'text.secondary' }}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            variant="outlined"
+                                            onClick={handleUpdateContribution}
+                                            disabled={!contributionAmount || !contributionFrequency}
+                                            sx={{
+                                                borderColor: 'secondary.main',
+                                                color: 'secondary.main',
+                                                '&:hover': { bgcolor: 'rgba(0, 200, 150, 0.08)', borderColor: 'secondary.main' },
+                                                '&.Mui-disabled': { borderColor: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.3)' },
+                                            }}
+                                        >
+                                            Update Contribution
+                                        </Button>
+                                    </Box>
+                                ) : (
+                                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 'auto' }}>
+                                        <Button
+                                            variant="outlined"
+                                            onClick={handleAddContribution}
+                                            disabled={!contributionAmount || !contributionFrequency}
+                                            sx={{
+                                                borderColor: 'secondary.main',
+                                                color: 'secondary.main',
+                                                '&:hover': { bgcolor: 'rgba(0, 200, 150, 0.08)', borderColor: 'secondary.main' },
+                                                '&.Mui-disabled': { borderColor: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.3)' },
+                                            }}
+                                        >
+                                            + Add Contribution
+                                        </Button>
+                                    </Box>
+                                )}
                             </Box>
                         </Grid>
 
@@ -257,6 +325,8 @@ export const InvestmentsDetails = () => {
                                     <Contributions 
                                         investment={investment}
                                         openDeleteDialog={handleOpenDeleteDialog}
+                                        setEditMode={setEditMode}
+                                        setEditContribution={setEditContribution}
                                     />
                                 ) : (
                                     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
